@@ -1,6 +1,5 @@
 package co.edu.udc.desechos_fabrica.location.domain.valueobject;
 
-import co.edu.udc.desechos_fabrica.location.domain.valueobjects.LocationName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationNameException;
@@ -15,7 +14,7 @@ public class LocationNameTest {
     public void testValidLocationNameCreation() {
         final String validName = "Valid Location";
         final LocationName locationName = new LocationName(validName);
-        assertEquals(validName, locationName.locationName());
+        assertEquals(validName, locationName.value());
     }
 
     @Test
