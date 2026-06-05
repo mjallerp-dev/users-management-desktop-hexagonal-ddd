@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.location.application.service.mapper;
 
 import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
+import co.edu.udc.desechos_fabrica.location.application.service.dto.command.ActivateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.command.CreateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.command.UpdateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.query.GetLocationByIdQuery;
@@ -37,4 +38,11 @@ public class LocationApplicationMapper {
         return new LocationId(query.id());
     }
 
+    public LocationModel fromActivateCommandToModel(LocationModel existingLocation) {
+        return existingLocation.activate();
+    }
+
+    public LocationModel fromDeactivateCommandToModel(LocationModel existingLocation) {
+        return existingLocation.deactivate();
+    }
 }
