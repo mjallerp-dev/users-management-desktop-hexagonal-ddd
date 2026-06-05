@@ -21,7 +21,6 @@ import java.util.Set;
 public class CreateLocationService implements CreateLocationUseCase {
 
     private final SaveLocationPort saveLocationPort;
-    private final GetLocationByIdPort getLocationByIdPort;
     private final Validator validator;
 
     @Override
