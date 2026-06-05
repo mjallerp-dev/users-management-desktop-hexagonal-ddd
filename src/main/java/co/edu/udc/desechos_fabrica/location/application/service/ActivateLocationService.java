@@ -1,9 +1,10 @@
-package co.edu.udc.desechos_fabrica.location.application.service.mapper;
+package co.edu.udc.desechos_fabrica.location.application.service;
 
 import co.edu.udc.desechos_fabrica.location.application.port.in.ActivateLocationUseCase;
 import co.edu.udc.desechos_fabrica.location.application.port.out.GetLocationByIdPort;
 import co.edu.udc.desechos_fabrica.location.application.port.out.UpdateLocationPort;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.command.ActivateLocationCommand;
+import co.edu.udc.desechos_fabrica.location.application.service.mapper.LocationApplicationMapper;
 import co.edu.udc.desechos_fabrica.location.domain.exception.LocationNotFoundException;
 import co.edu.udc.desechos_fabrica.location.domain.model.LocationModel;
 import co.edu.udc.desechos_fabrica.location.domain.valueobject.LocationId;
@@ -32,14 +33,14 @@ public class ActivateLocationService implements ActivateLocationUseCase {
         return updateLocationPort.update(locationToActivate);
     }
 
-    public void validateCommand(final ActivateLocationCommand command){
+    private void validateCommand(final ActivateLocationCommand command){
         final Set<ConstraintViolation<ActivateLocationCommand>> violations = validator.validate(command);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }
     }
 
-    public LocationModel findExistingLocationOrFail(final LocationId id) {
+    private LocationModel findExistingLocationOrFail(final LocationId id) {
         return getLocationByIdPort.getById(id)
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
