@@ -7,8 +7,5 @@ public record ActivateLocationCommand (
 
     @NotNull(message = "location id must not be null")
         @Positive(message = "location id must be greater than zero")
-        Long id,
-    @NotNull(message = "enterprise id must not be null")
-        @Positive(message = "enterprise id must be greater than zero")
-        Long enterpriseId) {
+        Long id) {
 }

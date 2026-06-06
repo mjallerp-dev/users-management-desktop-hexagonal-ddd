@@ -1,12 +1,12 @@
 package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.mapper;
 
+import co.edu.udc.desechos_fabrica.location.application.service.dto.command.ActivateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.command.CreateLocationCommand;
+import co.edu.udc.desechos_fabrica.location.application.service.dto.command.DeactivateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.command.UpdateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.query.GetLocationByIdQuery;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.CreateLocationRequest;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.*;
 import co.edu.udc.desechos_fabrica.location.domain.model.LocationModel;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.UpdateLocationRequest;
 
 import java.util.List;
 
@@ -36,6 +36,18 @@ public final class LocationDesktopMapper {
                 request.newState(),
                 request.newCity(),
                 new UpdateLocationCommand.CoordinateCommand(request.newLatitude(), request.newLongitude())
+        );
+    }
+
+    public static ActivateLocationCommand toActivateCommand(final ActivateLocationRequest request) {
+        return new ActivateLocationCommand(
+                request.id()
+        );
+    }
+
+    public static DeactivateLocationCommand toDeactivateCommand(final DeactivateLocationRequest request){
+        return new DeactivateLocationCommand(
+                request.id()
         );
     }
 
