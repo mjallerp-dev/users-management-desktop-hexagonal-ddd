@@ -14,7 +14,7 @@ import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.email.JavaMailEma
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.email.SmtpConfig;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.config.DatabaseConfig;
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.config.DatabaseConnectionFactory;
-import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.repository.UserRepositoryPostgreSQL;
+import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.repository.UserRepositoryPostgresSQL;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 
 import java.sql.Connection;
@@ -41,7 +41,7 @@ public final class DependencyContainer {
     final AppProperties properties = new AppProperties();
 
     final Connection connection = buildDatabaseConnection(properties);
-    final UserRepositoryPostgreSQL userRepository = new UserRepositoryPostgreSQL(connection);
+    final UserRepositoryPostgresSQL userRepository = new UserRepositoryPostgresSQL(connection);
 
     final JavaMailEmailSenderAdapter emailSender =
         new JavaMailEmailSenderAdapter(buildSmtpConfig(properties));

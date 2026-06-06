@@ -36,7 +36,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * found, SQLException; getByEmail() — found, not found, SQLException; getAll() — happy path,
  * SQLException; delete() — happy path, SQLException.
  */
-@DisplayName("UserRepositoryPostgreSQL")
+@DisplayName("UserRepositoryPostgresSQL")
 @ExtendWith(MockitoExtension.class)
 class UserRepositoryPostgreSQLTest {
 
@@ -54,13 +54,13 @@ class UserRepositoryPostgreSQLTest {
   @Mock private PreparedStatement statement;
   @Mock private ResultSet resultSet;
 
-  private UserRepositoryPostgreSQL repository;
+  private UserRepositoryPostgresSQL repository;
   private UserModel userModel;
   private UserEmail userEmail;
 
   @BeforeEach
   void setUp() {
-    repository = new UserRepositoryPostgreSQL(connection);
+    repository = new UserRepositoryPostgresSQL(connection);
     userEmail = new UserEmail(EMAIL);
     userModel =
         new UserModel(

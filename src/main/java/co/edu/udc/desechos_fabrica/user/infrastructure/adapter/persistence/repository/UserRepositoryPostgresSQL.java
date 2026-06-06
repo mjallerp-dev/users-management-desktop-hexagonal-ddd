@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Log
 @RequiredArgsConstructor
-public final class UserRepositoryPostgreSQL
+public final class UserRepositoryPostgresSQL
     implements SaveUserPort,
         UpdateUserPort,
         GetUserByEmailPort,
