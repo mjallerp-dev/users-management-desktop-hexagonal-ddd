@@ -7,7 +7,7 @@ import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.ha
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.LoginHandler;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.UpdateUserHandler;
-import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;

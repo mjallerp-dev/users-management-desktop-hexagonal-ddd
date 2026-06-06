@@ -2,7 +2,7 @@ package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.u
 
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
-import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 

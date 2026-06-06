@@ -1,7 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler;
 
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidCredentialsException;
-import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;

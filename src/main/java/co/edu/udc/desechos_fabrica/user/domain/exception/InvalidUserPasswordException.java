@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.domain.exception;
 
-import co.edu.udc.desechos_fabrica.shared.DomainException;
+import co.edu.udc.desechos_fabrica.shared.domain.DomainException;
 
 public final class InvalidUserPasswordException extends DomainException {
 
