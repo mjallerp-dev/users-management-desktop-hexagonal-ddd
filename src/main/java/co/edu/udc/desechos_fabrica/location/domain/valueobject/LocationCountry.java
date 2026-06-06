@@ -3,15 +3,15 @@ package co.edu.udc.desechos_fabrica.location.domain.valueobject;
 import java.util.Objects;
 import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationCountryException;
 
-public record LocationCountry(String country) {
+public record LocationCountry(String value) {
 
     private static final int MINIMUM_LENGTH = 3;
 
     public LocationCountry {
-        final String normalizedValue = Objects.requireNonNull(country, "Location country can not be null").trim();
+        final String normalizedValue = Objects.requireNonNull(value, "Location country can not be null").trim();
         validateNotEmpty(normalizedValue);
         validateMinimumLength(normalizedValue);
-        country = normalizedValue;
+        value = normalizedValue;
     }
 
     public void validateNotEmpty(final String normalizedValue) {
@@ -28,6 +28,6 @@ public record LocationCountry(String country) {
 
     @Override
     public String toString() {
-        return country;
+        return value;
     }
 }
