@@ -4,7 +4,6 @@ public record UpdateLocationRequest(
         Long id,
         String newName,
         String newAddress,
-        Long enterpriseId,
         String newCountry,
         String newState,
         String newCity,

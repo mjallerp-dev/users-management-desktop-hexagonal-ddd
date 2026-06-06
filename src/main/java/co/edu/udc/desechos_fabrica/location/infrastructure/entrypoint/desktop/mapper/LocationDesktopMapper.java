@@ -31,7 +31,6 @@ public final class LocationDesktopMapper {
                 request.id(),
                 request.newName(),
                 request.newAddress(),
-                request.enterpriseId(),
                 request.newCountry(),
                 request.newState(),
                 request.newCity(),

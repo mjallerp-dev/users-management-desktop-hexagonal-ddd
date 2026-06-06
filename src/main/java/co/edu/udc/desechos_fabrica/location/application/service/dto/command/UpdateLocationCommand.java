@@ -17,9 +17,6 @@ public record UpdateLocationCommand(
     @NotBlank(message = "location address must be not blank")
         @Size(min = 5, message = "location address must have at least 5 characters")
         String newAddress,
-    @NotNull(message = "enterprise id must not be null")
-        @Positive(message = "enterprise id must be greater than zero")
-        Long enterpriseId,
     @NotBlank(message = "location country must be not blank")
         @Size(min = 3, message = "location country must have at least 3 characters")
         String newCountry,
