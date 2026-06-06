@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.location.application.service.dto.query;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public record GetLocationByIdQuery(@NotBlank(message = "id must not be blank") Long id){
+public record GetLocationByIdQuery(@NotNull(message = "id must not be null") Long id){
 }
