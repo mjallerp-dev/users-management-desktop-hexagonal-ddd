@@ -1,5 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler;
 
+import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;

@@ -5,7 +5,7 @@ import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cl
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.CreateLocationRequest;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
-import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
 import lombok.RequiredArgsConstructor;
 
