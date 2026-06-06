@@ -17,7 +17,6 @@ import java.util.List;
 public class LocationPersistenceMapper {
 
      public LocationPersistenceDto fromModelToDto(final LocationModel location) {
-         final String combinateCoordinate = location.getCoordinate().latitude() + "," + location.getCoordinate().longitude();
          return new LocationPersistenceDto(
             location.getId() != null ? location.getId().value() : null,
             location.getName().value(),
@@ -26,7 +25,8 @@ public class LocationPersistenceMapper {
             location.getCountry().value(),
             location.getState().value(),
             location.getCity().value(),
-            combinateCoordinate,
+            location.getCoordinate().latitude(),
+            location.getCoordinate().longitude(),
             location.getStatus().name(),
             null,
             null);
@@ -41,7 +41,8 @@ public class LocationPersistenceMapper {
                 resultSet.getString("country"),
                 resultSet.getString("state"),
                 resultSet.getString("city"),
-                resultSet.getString("coordinate"),
+                resultSet.getDouble("latitude"),
+                resultSet.getDouble("longitude"),
                 resultSet.getString("status"),
                 resultSet.getString("created_at"),
                 resultSet.getString("updated_at")
@@ -57,7 +58,7 @@ public class LocationPersistenceMapper {
                 new LocationCountry(entity.country()),
                 new LocationState(entity.state()),
                 new LocationCity(entity.city()),
-                parseCoordinate(entity.coordinate()),
+                new LocationCoordinate(entity.latitude(), entity.longitude()),
                 LocationStatus.valueOf(entity.status())
         );
     }
@@ -72,17 +73,5 @@ public class LocationPersistenceMapper {
             locations.add(fromResultSetToModel(resultSet));
         }
         return locations;
-    }
-
-    private LocationCoordinate parseCoordinate(final String coordinate) {
-        if (coordinate == null || coordinate.isBlank()) {
-            return null;
-        }
-
-        final String[] parts = coordinate.split(",");
-        final double latitude = Double.parseDouble(parts[0].trim());
-        final double longitude = Double.parseDouble(parts[1].trim());
-
-        return new LocationCoordinate(latitude, longitude);
     }
 }

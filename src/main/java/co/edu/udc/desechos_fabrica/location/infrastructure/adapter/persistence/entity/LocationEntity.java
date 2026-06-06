@@ -8,7 +8,8 @@ public record LocationEntity (
     String country,
     String state,
     String city,
-    String coordinate,
+    Double latitude,
+    Double longitude,
     String status,
     String createdAt,
     String updatedAt) {
