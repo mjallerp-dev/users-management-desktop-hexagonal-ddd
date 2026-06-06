@@ -1,0 +1,32 @@
+package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.handler;
+
+import co.edu.udc.desechos_fabrica.location.domain.exception.LocationAlreadyExistsException;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.controller.LocationController;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.ActivateLocationRequest;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class DeactivateLocationHandler implements OperationHandler {
+
+    private final LocationController locationController;
+    private final ConsoleIO console;
+    private final LocationResponsePrinter printer;
+
+    @Override
+    public void handle(){
+        final Long id = Long.valueOf(console.readRequired("Location Id   : "));
+                try {
+                    final LocationResponse activated =
+                            locationController.activateLocation(
+                                    new ActivateLocationRequest(id));
+                    console.println("\n  Location activated successfully.");
+                    printer.print(activated);
+                } catch (final LocationAlreadyExistsException exception) {
+                    console.println("  Error: " + exception.getMessage());
+                }
+    }
+}
