@@ -10,7 +10,7 @@ import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class DeactivateLocationHandler implements OperationHandler {
+public class ActivateLocationHandler implements OperationHandler {
 
     private final LocationController locationController;
     private final ConsoleIO console;
@@ -19,14 +19,14 @@ public class DeactivateLocationHandler implements OperationHandler {
     @Override
     public void handle(){
         final Long id = Long.valueOf(console.readRequired("Location Id   : "));
-                try {
-                    final LocationResponse deactivated =
-                            locationController.activateLocation(
-                                    new ActivateLocationRequest(id));
-                    console.println("\n  Location deactivated successfully.");
-                    printer.print(deactivated);
-                } catch (final LocationAlreadyExistsException exception) {
-                    console.println("  Error: " + exception.getMessage());
-                }
+        try {
+            final LocationResponse activated =
+                    locationController.activateLocation(
+                            new ActivateLocationRequest(id));
+            console.println("\n  Location activated successfully.");
+            printer.print(activated);
+        } catch (final LocationAlreadyExistsException exception) {
+            console.println("  Error: " + exception.getMessage());
+        }
     }
 }
