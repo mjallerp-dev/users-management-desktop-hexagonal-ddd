@@ -1,12 +1,11 @@
 package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.controller;
 
-import co.edu.udc.desechos_fabrica.location.application.port.in.ActivateLocationUseCase;
-import co.edu.udc.desechos_fabrica.location.application.port.in.CreateLocationUseCase;
-import co.edu.udc.desechos_fabrica.location.application.port.in.DeactivateLocationUseCase;
-import co.edu.udc.desechos_fabrica.location.application.port.in.UpdateLocationUseCase;
+import co.edu.udc.desechos_fabrica.location.application.port.in.*;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.*;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.mapper.LocationDesktopMapper;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 public class LocationController {
@@ -15,6 +14,8 @@ public class LocationController {
     private final UpdateLocationUseCase updateLocationUseCase;
     private final ActivateLocationUseCase activateLocationUseCase;
     private final DeactivateLocationUseCase deactivateLocationUseCase;
+    private final GetLocationByIdUseCase getLocationByIdUseCase;
+    private final GetAllLocationsUseCase getAllLocationsUseCase;
 
     public LocationResponse createLocation(final CreateLocationRequest request) {
         final var command = LocationDesktopMapper.toCreateCommand(request);
@@ -40,4 +41,14 @@ public class LocationController {
         return LocationDesktopMapper.toResponse(locationToActivate);
     }
 
+    public LocationResponse getLocationById(final Long id){
+        final var query = LocationDesktopMapper.toGetByIdQuery(id);
+        final var location = getLocationByIdUseCase.execute(query);
+        return LocationDesktopMapper.toResponse(location);
+    }
+
+    public List<LocationResponse> listAllLocations(){
+        final var locations = getAllLocationsUseCase.execute();
+        return LocationDesktopMapper.toResponseList(locations);
+    }
 }
