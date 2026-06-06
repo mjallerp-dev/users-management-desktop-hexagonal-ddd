@@ -30,7 +30,7 @@ public final class UpdateLocationService implements UpdateLocationUseCase {
         final LocationModel existingLocation = findExistingLocationOrFail(locationId);
 
         final LocationModel locationToUpdate = LocationApplicationMapper.fromUpdateCommandToModel(command, existingLocation);
-        return updateLocationPort.update(locationToUpdate);
+        return updateLocationPort.update(locationId, locationToUpdate);
     }
 
     public void validateCommand(UpdateLocationCommand command) {
@@ -41,7 +41,7 @@ public final class UpdateLocationService implements UpdateLocationUseCase {
     }
 
     public LocationModel findExistingLocationOrFail(final LocationId id) {
-        return getLocationByIdPort.getById(id)
+        return getLocationByIdPort.getById(id.value())
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
 }

@@ -3,7 +3,7 @@ package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.c
 import co.edu.udc.desechos_fabrica.location.domain.exception.LocationAlreadyExistsException;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.controller.LocationController;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.ActivateLocationRequest;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.DeactivateLocationRequest;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
@@ -21,8 +21,8 @@ public class DeactivateLocationHandler implements OperationHandler {
         final Long id = Long.valueOf(console.readRequired("Location Id   : "));
                 try {
                     final LocationResponse deactivated =
-                            locationController.activateLocation(
-                                    new ActivateLocationRequest(id));
+                            locationController.deactivateLocation(
+                                    new DeactivateLocationRequest(id));
                     console.println("\n  Location deactivated successfully.");
                     printer.print(deactivated);
                 } catch (final LocationAlreadyExistsException exception) {
