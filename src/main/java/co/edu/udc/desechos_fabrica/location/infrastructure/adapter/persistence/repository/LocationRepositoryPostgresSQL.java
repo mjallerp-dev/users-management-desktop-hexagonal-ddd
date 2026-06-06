@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.location.infrastructure.adapter.persistence.repository;
 
-import co.edu.udc.desechos_fabrica.location.application.port.out.GetAllLocationPort;
+import co.edu.udc.desechos_fabrica.location.application.port.out.GetAllLocationsPort;
 import co.edu.udc.desechos_fabrica.location.application.port.out.GetLocationByIdPort;
 import co.edu.udc.desechos_fabrica.location.application.port.out.SaveLocationPort;
 import co.edu.udc.desechos_fabrica.location.application.port.out.UpdateLocationPort;
@@ -23,7 +23,7 @@ public final class LocationRepositoryPostgresSQL
         implements SaveLocationPort,
         UpdateLocationPort,
         GetLocationByIdPort,
-        GetAllLocationPort {
+        GetAllLocationsPort {
 
     private static final String SQL_INSERT =
             "INSERT INTO location(name, address, enterprise_id, country, state, city, latitude, longitude, status, created_at, updated_at) "
