@@ -4,13 +4,9 @@ import co.edu.udc.desechos_fabrica.location.application.port.in.ActivateLocation
 import co.edu.udc.desechos_fabrica.location.application.port.in.CreateLocationUseCase;
 import co.edu.udc.desechos_fabrica.location.application.port.in.DeactivateLocationUseCase;
 import co.edu.udc.desechos_fabrica.location.application.port.in.UpdateLocationUseCase;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.CreateLocationRequest;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.UpdateLocationRequest;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.*;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.mapper.LocationDesktopMapper;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public class LocationController {
@@ -31,4 +27,17 @@ public class LocationController {
         final var locationToUpdate = updateLocationUseCase.execute(command);
         return LocationDesktopMapper.toResponse(locationToUpdate);
     }
+
+    public LocationResponse activateLocation(final ActivateLocationRequest request) {
+        final var command = LocationDesktopMapper.toActivateCommand(request);
+        final var locationToActivate = activateLocationUseCase.execute(command);
+        return LocationDesktopMapper.toResponse(locationToActivate);
+    }
+
+    public LocationResponse deactivateLocation(final DeactivateLocationRequest request) {
+        final var command = LocationDesktopMapper.toDeactivateCommand(request);
+        final var locationToActivate = deactivateLocationUseCase.execute(command);
+        return LocationDesktopMapper.toResponse(locationToActivate);
+    }
+
 }

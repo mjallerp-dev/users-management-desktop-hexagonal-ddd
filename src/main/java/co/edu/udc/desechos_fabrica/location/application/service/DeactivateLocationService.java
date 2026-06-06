@@ -30,7 +30,7 @@ public class DeactivateLocationService implements DeactivateLocationUseCase {
         final LocationModel existingLocation = findExistingLocationOrFail(locationId);
 
         final LocationModel locationToDeactivate = LocationApplicationMapper.fromDeactivateCommandToModel(existingLocation);
-        return updateLocationPort.update(locationToDeactivate);
+        return updateLocationPort.update(locationId, locationToDeactivate);
     }
 
     private void validateCommand(final DeactivateLocationCommand command){
@@ -41,7 +41,7 @@ public class DeactivateLocationService implements DeactivateLocationUseCase {
     }
 
     private LocationModel findExistingLocationOrFail(final LocationId id) {
-        return getLocationByIdPort.getById(id)
+        return getLocationByIdPort.getById(id.value())
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
 }
