@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.application.service.mapper;
 
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
@@ -18,11 +18,13 @@ public class UserApplicationMapper {
 
   public UserModel fromCreateCommandToModel(final CreateUserCommand command) {
     return UserModel.create(
+        null,
         new UserFirstName(command.firstName()),
         new UserLastName(command.lastName()),
         new UserEmail(command.email()),
         UserPassword.fromPlainText(command.password()),
-        UserRole.fromString(command.role()));
+        UserRole.fromString(command.role()),
+        command.enterpriseId());
   }
 
   public UserModel fromUpdateCommandToModel(
@@ -30,14 +32,13 @@ public class UserApplicationMapper {
 
       final UserFirstName newFirstName = new UserFirstName(command.newFirstName());
       final UserLastName newLastName = new UserLastName(command.newLastName());
-      final UserEmail newEmail = new UserEmail(command.newEmail());
+      final UserEmail newEmail = resolveEmail(command.newEmail(), currentUser.getEmail());
       final UserPassword newPassword = resolvePassword(command.password(), currentUser.getPassword());
       final UserRole newRole = UserRole.fromString(command.role());
       final UserStatus newStatus = UserStatus.fromString(command.status());
-      final EnterpriseNit newEnterpriseNit = command.nit() != null ? new EnterpriseNit(command.nit()) : null;
-
+      final EnterpriseId newEnterpriseId = resolveEnterpriseId(command.enterpriseId(), currentUser.getEnterpriseId());
     return currentUser.updateWith(
-        newFirstName, newLastName, newEmail, newPassword, newRole, newStatus, newEnterpriseNit
+        newFirstName, newLastName, newEmail, newPassword, newRole, newStatus, newEnterpriseId
     );
   }
 
@@ -56,4 +57,21 @@ public class UserApplicationMapper {
     }
     return UserPassword.fromPlainText(newPlainPassword);
   }
+
+  private UserEmail resolveEmail(final String newEmail, final UserEmail currentEmail){
+      if (Objects.isNull(newEmail) || newEmail.isBlank()) {
+          return currentEmail;
+      }
+      return UserEmail.fromPlainText(newEmail);
+  }
+
+    private EnterpriseId resolveEnterpriseId(final Long newEnterpriseId, final EnterpriseId currentEnterpriseId) {
+        if (Objects.nonNull(currentEnterpriseId)) {
+            return currentEnterpriseId;
+        }
+        if (Objects.isNull(newEnterpriseId)) {
+            return null;
+        }
+        return new EnterpriseId(newEnterpriseId);
+    }
 }

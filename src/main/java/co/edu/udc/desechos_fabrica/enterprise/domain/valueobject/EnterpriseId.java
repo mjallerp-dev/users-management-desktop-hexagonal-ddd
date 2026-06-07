@@ -7,7 +7,7 @@ import java.util.Objects;
 public record EnterpriseId(Long value) {
 
     public EnterpriseId{
-        Objects.requireNonNull(value, "Location Id can not be null");
+        Objects.requireNonNull(value, "Enterprise Id can not be null");
         validateGreaterThanZero(value);
     }
 

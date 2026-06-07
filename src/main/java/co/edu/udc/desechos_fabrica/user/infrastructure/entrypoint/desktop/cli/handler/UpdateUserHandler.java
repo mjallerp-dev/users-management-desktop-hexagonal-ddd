@@ -37,10 +37,11 @@ public final class UpdateUserHandler implements OperationHandler {
       roleManager.checkUpdatePermissions(actor, targetUser, null); // `null` para chequear permiso general
 
       console.println("\nEnter the new data for the user:");
-      final String newFirstName = console.readRequired("New first name: ");
-      final String newLastName = console.readRequired("New last name: ");
-      final String newEmail = console.readRequired("New email: ");
-      final String newPassword = console.readOptional("New password (leave blank to keep current): ");
+      final String newFirstName = console.readRequired              ("New first name                                 : ");
+      final String newLastName = console.readRequired               ("New last name                                  : ");
+      final String newEmail = console.readOptional                  ("New email (leave blank to keep current)        : ");
+      final String newPassword = console.readOptional               ("New password (leave blank to keep current)     : ");
+      final Long newEnterpriseId = console.readLong                 ("New enterprise ID (leave blank to keep current): ");
       
       final UserMenuHandler menuHandler = new UserMenuHandler(console);
       final UserRole newRole = menuHandler.selectRoleFromConsole();
@@ -58,7 +59,7 @@ public final class UpdateUserHandler implements OperationHandler {
               newPassword.isBlank() ? null : newPassword,
               newRole.name(),
               newStatus.name(),
-              null
+              newEnterpriseId
           ));
 
       console.println("\n  User updated successfully.");

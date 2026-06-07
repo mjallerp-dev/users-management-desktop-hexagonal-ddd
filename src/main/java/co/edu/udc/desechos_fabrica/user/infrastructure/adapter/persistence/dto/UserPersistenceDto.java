@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.dto;
 
 public record UserPersistenceDto(
+        Long id,
         String firstName,
         String lastName,
         String email,

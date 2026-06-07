@@ -20,6 +20,7 @@ public final class UserResponsePrinter {
     console.printf(ROW_FORMAT, "Email",  response.email());
     console.printf(ROW_FORMAT, "Role",   response.role());
     console.printf(ROW_FORMAT, "Status", response.status());
+    console.printf(ROW_FORMAT, "Enterprise Id", response.enterpriseId());
     console.println(SEPARATOR);
   }
 

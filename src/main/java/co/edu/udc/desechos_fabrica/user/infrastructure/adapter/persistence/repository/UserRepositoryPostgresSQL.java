@@ -14,10 +14,7 @@ import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.mappe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,20 +29,20 @@ public final class UserRepositoryPostgresSQL
 
   private static final String SQL_INSERT =
       "INSERT INTO \"user\" "
-      + "(first_name, last_name, email, password, role, status, created_at, updated_at) "
-      + "VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
+      + "(first_name, last_name, email, password, role, status, enterprise_id, created_at, updated_at) "
+      + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
   private static final String SQL_UPDATE =
-      "UPDATE \"user\" SET first_name = ?, last_name = ?, email = ?, password = ?, role = ?, status = ?, updated_at = NOW(), enterprise_id = (SELECT id FROM enterprise WHERE nit = ?) "
+      "UPDATE \"user\" SET first_name = ?, last_name = ?, email = ?, password = ?, role = ?, status = ?, updated_at = NOW(), enterprise_id = ? "
       + "WHERE email = ?";
 
   private static final String SQL_SELECT_BY_EMAIL =
-      "SELECT first_name, last_name, email, password, role, status, created_at, updated_at "
+      "SELECT id, first_name, last_name, email, password, role, status, enterprise_id, created_at, updated_at "
       + "FROM \"user\" "
       + "WHERE email = ? LIMIT 1";
 
   private static final String SQL_SELECT_ALL =
-      "SELECT first_name, last_name, email, password, role, status, created_at, updated_at "
+      "SELECT id, first_name, last_name, email, password, role, status, enterprise_id, created_at, updated_at "
       + "FROM \"user\" "
       + "ORDER BY first_name ASC";
 
@@ -58,8 +55,8 @@ public final class UserRepositoryPostgresSQL
   @Override
   public UserModel save(final UserModel user) {
     final UserPersistenceDto dto = UserPersistenceMapper.fromModelToDto(user);
-    executeSave(dto);
-    return findByEmailOrFail(user.getEmail());
+    final Long generatedId = executeSaveAndGetId(dto);
+    return user.withId(generatedId);
   }
 
   @Override
@@ -103,15 +100,29 @@ public final class UserRepositoryPostgresSQL
     }
   }
 
-  private void executeSave(final UserPersistenceDto dto) {
-    try (final PreparedStatement statement = connection.prepareStatement(SQL_INSERT)) {
+  private Long executeSaveAndGetId(final UserPersistenceDto dto) {
+    try (final PreparedStatement statement = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
       statement.setString(1, dto.firstName());
       statement.setString(2, dto.lastName());
       statement.setString(3, dto.email());
       statement.setString(4, dto.password());
       statement.setString(5, dto.role());
       statement.setString(6, dto.status());
+
+      if (dto.enterpriseId() != null) {
+        statement.setLong(7, dto.enterpriseId());
+      } else {
+        statement.setNull(7, java.sql.Types.BIGINT);
+      }
+
       statement.executeUpdate();
+
+      try (final ResultSet generatedKeys = statement.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+          return generatedKeys.getLong(1);
+        }
+        throw new SQLException("The saved user not generated an ID.");
+      }
     } catch (final SQLException exception) {
       throw PersistenceException.becauseSaveFailed(dto.email(), exception);
     }
@@ -125,7 +136,13 @@ public final class UserRepositoryPostgresSQL
       statement.setString(4, dto.password());
       statement.setString(5, dto.role());
       statement.setString(6, dto.status());
-      statement.setString(7, dto.nit());
+
+      if (dto.enterpriseId() != null) {
+        statement.setLong(7, dto.enterpriseId());
+      } else {
+        statement.setNull(7, java.sql.Types.BIGINT);
+      }
+
       statement.setString(8, currentEmail.value());
       statement.executeUpdate();
     } catch (final SQLException exception) {
@@ -137,4 +154,5 @@ public final class UserRepositoryPostgresSQL
     return getByEmail(userEmail)
         .orElseThrow(() -> UserNotFoundException.becauseEmailWasNotFound(userEmail.value()));
   }
+
 }

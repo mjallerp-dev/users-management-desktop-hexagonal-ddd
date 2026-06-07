@@ -5,4 +5,6 @@ public record UserResponse(
     String lastName,
     String email,
     String role,
-    String status) {}
+    String status,
+    Long enterpriseId
+) {}

@@ -9,4 +9,4 @@ public record UpdateUserRequest(
     String password,
     String role,
     String status,
-    String nit) {}
+    Long enterpriseId) {}

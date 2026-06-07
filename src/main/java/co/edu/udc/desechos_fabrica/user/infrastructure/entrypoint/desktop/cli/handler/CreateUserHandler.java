@@ -20,15 +20,16 @@ public final class CreateUserHandler implements OperationHandler {
 
   @Override
   public void handle() {
-    final String firstName = console.readRequired("FirstName : ");
-    final String lastName = console.readRequired("LastName  : ");
-    final String email = console.readRequired("Email     : ");
-    final String password = console.readRequired("Password  : ");
+    final String firstName = console.readRequired("First name                            : ");
+    final String lastName = console.readRequired ("Last name                             : ");
+    final String email = console.readRequired    ("Email                                 : ");
+    final String password = console.readRequired ("Password                              : ");
+    final Long enterpriseId = console.readLong   ("Enterprise ID (leave blank if unknown): ");;
 
     try {
       final UserResponse created =
               userController.createUser(
-                      new CreateUserRequest(firstName, lastName, email, password, UserRole.MEMBER));
+                      new CreateUserRequest(firstName, lastName, email, password, UserRole.MEMBER, enterpriseId));
       console.println("\n  User created successfully.");
       printer.print(created);
     } catch (final UserAlreadyExistsException exception) {

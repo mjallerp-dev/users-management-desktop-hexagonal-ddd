@@ -20,7 +20,12 @@ public final class UserDesktopMapper {
 
   public static CreateUserCommand toCreateCommand(final CreateUserRequest request) {
     return new CreateUserCommand(
-        request.firstName(), request.lastName(), request.email(), request.password(), request.role().name());
+        request.firstName(),
+        request.lastName(),
+        request.email(),
+        request.password(),
+        request.role().name(),
+        request.enterpriseId());
   }
 
   public static UpdateUserCommand toUpdateCommand(final UpdateUserRequest request) {
@@ -33,7 +38,7 @@ public final class UserDesktopMapper {
         request.password(),
         request.role(),
         request.status(),
-        request.nit());
+        request.enterpriseId());
   }
 
   public static DeleteUserCommand toDeleteCommand(final String actorEmail, final String targetEmail) {
@@ -54,7 +59,9 @@ public final class UserDesktopMapper {
         user.getLastName().value(),
         user.getEmail().value(),
         user.getRole().name(),
-        user.getStatus().name());
+        user.getStatus().name(),
+        (user.getEnterpriseId() != null) ? user.getEnterpriseId().value() : null
+        );
   }
 
   public static List<UserResponse> toResponseList(final List<UserModel> users) {
