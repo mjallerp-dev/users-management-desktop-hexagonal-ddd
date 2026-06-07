@@ -3,8 +3,8 @@ package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.c
 import co.edu.udc.desechos_fabrica.location.domain.exception.LocationNotFoundException;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.controller.LocationController;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

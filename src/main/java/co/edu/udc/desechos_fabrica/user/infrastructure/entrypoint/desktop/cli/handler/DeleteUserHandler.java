@@ -1,9 +1,9 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler;
 
-import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
 import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 import lombok.RequiredArgsConstructor;
 

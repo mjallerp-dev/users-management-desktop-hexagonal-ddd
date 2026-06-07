@@ -2,7 +2,7 @@ package co.edu.udc.desechos_fabrica;
 
 import co.edu.udc.desechos_fabrica.user.infrastructure.config.DependencyContainer;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.UserManagementCli;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

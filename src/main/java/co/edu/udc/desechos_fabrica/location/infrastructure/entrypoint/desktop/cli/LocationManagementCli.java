@@ -4,8 +4,8 @@ import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cl
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.menu.LocationMenuOption;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.controller.LocationController;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 

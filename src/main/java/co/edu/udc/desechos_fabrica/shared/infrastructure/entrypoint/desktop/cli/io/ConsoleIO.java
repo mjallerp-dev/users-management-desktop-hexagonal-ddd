@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.shared.infrastructure;
+package co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io;
 
 import java.io.PrintStream;
 import java.util.Scanner;

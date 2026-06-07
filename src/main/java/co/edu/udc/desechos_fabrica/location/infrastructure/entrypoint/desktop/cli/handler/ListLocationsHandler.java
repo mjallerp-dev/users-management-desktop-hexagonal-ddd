@@ -3,7 +3,7 @@ package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.c
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.controller.LocationController;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

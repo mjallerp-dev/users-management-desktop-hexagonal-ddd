@@ -1,7 +1,7 @@
 package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io;
 
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

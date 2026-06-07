@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler;
 
-import co.edu.udc.desechos_fabrica.shared.infrastructure.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
@@ -9,7 +9,7 @@ import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsExcept
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
 import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManagerService;
-import co.edu.udc.desechos_fabrica.shared.infrastructure.ConsoleIO;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.util.UserMenuHandler;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
