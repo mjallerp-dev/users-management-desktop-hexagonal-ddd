@@ -1,7 +1,7 @@
 package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.handler;
 
 import co.edu.udc.desechos_fabrica.location.domain.exception.LocationAlreadyExistsException;
-import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.controller.LocationController;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.controller.LocationController;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.io.LocationResponsePrinter;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.DeactivateLocationRequest;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.LocationResponse;

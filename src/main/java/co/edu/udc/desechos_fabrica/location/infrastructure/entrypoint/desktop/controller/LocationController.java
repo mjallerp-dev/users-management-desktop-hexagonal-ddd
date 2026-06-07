@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.controller;
+package co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.controller;
 
 import co.edu.udc.desechos_fabrica.location.application.port.in.*;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.dto.*;

@@ -22,7 +22,7 @@ public final class UserManagementCli {
   private static final String BANNER =
       """
       ==========================================
-           Users Management System
+           EcoResidues - Users Management
       ==========================================""";
 
   private static final String MENU_BORDER = "  ==========================================";
