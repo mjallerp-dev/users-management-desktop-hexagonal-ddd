@@ -9,17 +9,23 @@ import java.util.List;
 
 public class MenuService {
 
-    public List<UserMenuOption> getOptionsForRole(UserRole userRole) {
-        List<UserMenuOption> options = new ArrayList<>();
+    public List<MenuOption> getOptionsForRole(UserRole userRole) {
+        List<MenuOption> options = new ArrayList<>();
 
         options.add(UserMenuOption.LOGIN);
         options.add(UserMenuOption.EXIT);
 
         if (userRole == null) {
-            return options;
+            options.add(UserMenuOption.CREATE_USER);
+            options.add(UserMenuOption.LOGIN);
+            options.add(UserMenuOption.EXIT);
+        } else {
+            options.add(UserMenuOption.LOGOUT);
         }
         if (userRole == UserRole.ADMIN || userRole == UserRole.REVIEWER) {
             options.addAll(List.of(
+                    UserMenuOption.LIST_USERS,
+                    UserMenuOption.FIND_USER,
                     UserMenuOption.CREATE_USER,
                     UserMenuOption.UPDATE_USER,
                     UserMenuOption.CREATE_ENTERPRISE,
@@ -31,6 +37,8 @@ public class MenuService {
         }
         if (userRole == UserRole.ENTERPRISE_ADMIN)
             options.addAll(List.of(
+                    UserMenuOption.LIST_USERS,
+                    UserMenuOption.FIND_USER,
                     UserMenuOption.CREATE_USER,
                     UserMenuOption.UPDATE_USER,
                     UserMenuOption.UPDATE_ENTERPRISE,
@@ -40,6 +48,8 @@ public class MenuService {
             ));
         if (userRole == UserRole.MEMBER)
             options.addAll(List.of(
+                    UserMenuOption.LIST_USERS,
+                    UserMenuOption.FIND_USER,
                     UserMenuOption.UPDATE_USER,
                     LocationMenuOption.MANAGE_LOCATION
 
