@@ -11,6 +11,8 @@ import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.*;
 
 import java.util.Objects;
+
+import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UserResponse;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -39,6 +41,22 @@ public class UserApplicationMapper {
       final EnterpriseId newEnterpriseId = resolveEnterpriseId(command.enterpriseId(), currentUser.getEnterpriseId());
     return currentUser.updateWith(
         newFirstName, newLastName, newEmail, newPassword, newRole, newStatus, newEnterpriseId
+    );
+  }
+
+  public static UserModel toModel(UserResponse response) {
+      EnterpriseId enterpriseId = (response.enterpriseId() != null)
+              ? new EnterpriseId(response.enterpriseId())
+              : null;
+    return new UserModel(
+        null,
+        new UserFirstName(response.firstName()),
+        new UserLastName(response.lastName()),
+        new UserEmail(response.email()),
+        UserPassword.createDummy(),
+        UserRole.valueOf(response.role()),
+        UserStatus.valueOf(response.status()),
+        enterpriseId
     );
   }
 

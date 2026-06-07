@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler;
 
 import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.session.SessionManager;
 import co.edu.udc.desechos_fabrica.user.domain.exception.InvalidCredentialsException;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
@@ -22,8 +23,8 @@ public final class LoginHandler implements OperationHandler {
     final String password = console.readRequired("Password: ");
     try {
       final UserResponse user = userController.login(new LoginRequest(email, password));
+      SessionManager.login(user);
       console.println("\n  Login successful. Welcome!");
-      printer.print(user);
     } catch (final InvalidCredentialsException exception) {
       console.println("  Error: " + exception.getMessage());
     }

@@ -73,4 +73,8 @@ public final class UserPassword {
     }
   }
 
+  public static UserPassword createDummy() {
+    return new UserPassword("DUMMY_HASH_FOR_AUTHORIZATION_ONLY");
+  }
+
 }

@@ -1,10 +1,13 @@
 package co.edu.udc.desechos_fabrica.user.application.service;
 
+import co.edu.udc.desechos_fabrica.shared.infrastructure.session.SessionManager;
 import co.edu.udc.desechos_fabrica.user.application.port.in.UpdateUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.UpdateUserPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.mapper.UserApplicationMapper;
+import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
+import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
@@ -30,22 +33,24 @@ public final class UpdateUserService implements UpdateUserUseCase {
   public UserModel execute(final UpdateUserCommand command) {
     validateCommand(command);
 
-    final UserModel actor = findExistingUserOrFail(new UserEmail(command.actorEmail()));
+    if (!SessionManager.isLoggedIn()){
+      throw PermissionDeniedException.becauseSessionIsInactive();
+    }
+    final UserModel actor = UserApplicationMapper.toModel(SessionManager.getCurrentUser());
     final UserModel targetUser = findExistingUserOrFail(new UserEmail(command.targetEmail()));
-    
-    userRoleManager.checkUpdatePermissions(actor, targetUser, null);
+
+    final UserRole newRoleFromCommand = UserRole.fromString(command.role());
+    userRoleManager.checkUpdatePermissions(actor, targetUser, newRoleFromCommand);;
 
     final UserEmail newEmail = new UserEmail(command.newEmail());
     if (!newEmail.equals(targetUser.getEmail())) {
       ensureEmailIsNotTakenByAnotherUser(newEmail);
     }
 
-    final UserModel userToUpdate =
-        UserApplicationMapper.fromUpdateCommandToModel(command, targetUser);
+    final UserModel userToUpdate = UserApplicationMapper.fromUpdateCommandToModel(command, targetUser);
     final UserModel updatedUser = updateUserPort.update(targetUser.getEmail(), userToUpdate);
-
+    
     emailNotificationService.notifyUserUpdated(updatedUser);
-
     return updatedUser;
   }
 

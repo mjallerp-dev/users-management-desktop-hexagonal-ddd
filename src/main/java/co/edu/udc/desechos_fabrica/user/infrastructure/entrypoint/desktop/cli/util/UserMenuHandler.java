@@ -31,11 +31,13 @@ public final class UserMenuHandler {
     }
 
     private Optional<UserRole> getRoleByNumber(final int number) {
-        UserRole[] roles = UserRole.values();
-        if (number > 0 && number <= roles.length) {
-            return Optional.of(roles[number - 1]);
-        }
-        return Optional.empty();
+        return switch (number) {
+            case 1 -> Optional.of(UserRole.ADMIN);
+            case 2 -> Optional.of(UserRole.REVIEWER);
+            case 3 -> Optional.of(UserRole.ENTERPRISE_ADMIN);
+            case 4 -> Optional.of(UserRole.MEMBER);
+            default -> Optional.empty();
+        };
     }
 
     public UserStatus selectStatusFromConsole() {
@@ -58,11 +60,13 @@ public final class UserMenuHandler {
     }
 
     private Optional<UserStatus> getStatusByNumber(final int number) {
-        UserStatus[] status = UserStatus.values();
-        if (number > 0 && number <= status.length) {
-            return Optional.of(status[number - 1]);
-        }
-        return Optional.empty();
+        return switch (number) {
+            case 1 -> Optional.of(UserStatus.ACTIVE);
+            case 2 -> Optional.of(UserStatus.INACTIVE);
+            case 3 -> Optional.of(UserStatus.PENDING);
+            case 4 -> Optional.of(UserStatus.BLOCKED);
+            default -> Optional.empty();
+        };
     }
 
 }

@@ -11,12 +11,11 @@ public class UserRoleManagerService implements UserRoleManager {
     @Override
     public void checkUpdatePermissions(UserModel actor, UserModel targetUser, UserRole newRole) {
 
-        if (newRole != null && newRole != targetUser.getRole()) {
-            if (newRole.getLevel() >= actor.getRole().getLevel()) {
-                throw new PermissionDeniedException("You cannot assign a role that is equal to or higher than your own.");
-            }
-        }
+        validateActorStatus(actor.getStatus());
         validateAccessToTarget(actor, targetUser);
+            if (actor.getRole() != UserRole.ADMIN && newRole.getLevel() >= actor.getRole().getLevel()) {
+                throw PermissionDeniedException.becauseHaveNotUpdatePermission();
+            }
     }
 
     @Override
@@ -26,35 +25,29 @@ public class UserRoleManagerService implements UserRoleManager {
 
     private void validateAccessToTarget(UserModel actor, UserModel targetUser) {
 
-        final UserRole actorRole = actor.getRole();
-        final UserRole targetRole = targetUser.getRole();
-        final UserStatus actorStatus = actor.getStatus();
-
-        switch (actorStatus) {
-            case INACTIVE -> throw new PermissionDeniedException("Your account is inactive.");
-            case PENDING -> throw new PermissionDeniedException("Your account is pending approval. You cannot perform this action until your account is active.");
-            case BLOCKED -> throw new PermissionDeniedException("Your account is blocked.");
+        validateActorStatus(actor.getStatus());
+        if (actor.getRole() == UserRole.ADMIN) {
+            return;
         }
 
-        if (actorRole == UserRole.ADMIN) return;
+        if (actor.getRole().getLevel() <= targetUser.getRole().getLevel()) {
+            throw PermissionDeniedException.becauseUserIsHigher();
+        }
 
-        switch (targetRole) {
-            case ADMIN ->
-                    throw new PermissionDeniedException("Only an ADMIN can modify/delete a other ADMIN.");
-            case REVIEWER ->
-                    throw new PermissionDeniedException("Only an ADMIN can modify/delete a REVIEWER.");
-            case ENTERPRISE_ADMIN -> {
-                if (actorRole != UserRole.REVIEWER)
-                    throw new PermissionDeniedException("Insufficient permissions.");
+        if (actor.getRole() == UserRole.ENTERPRISE_ADMIN) {
+            if (!Objects.equals(actor.getEnterpriseId(), targetUser.getEnterpriseId())) {
+                throw PermissionDeniedException.becauseUserIsHigher();
             }
-            case MEMBER -> {
-                if (actorRole == UserRole.ENTERPRISE_ADMIN &&
-                        !Objects.equals(actor.getEnterpriseId(), targetUser.getEnterpriseId())) {
-                    throw new PermissionDeniedException("Scope restricted to your enterprise.");
-                }
-                if (actorRole == UserRole.MEMBER)
-                    throw new PermissionDeniedException("MEMBER cannot perform this action.");
-            }
+        }
+    }
+
+    private void validateActorStatus(UserStatus status) {
+        switch (status) {
+            case INACTIVE -> throw PermissionDeniedException.becauseUserIsInactive();
+            case PENDING  -> throw PermissionDeniedException.becauseUserIsPending();
+            case BLOCKED  -> throw PermissionDeniedException.becauseUserIdBlocked();
+            case ACTIVE   -> {}
+            default       -> throw new PermissionDeniedException("Invalid user status");
         }
     }
 }
