@@ -15,7 +15,7 @@ public enum LocationMenuOption {
     UPDATE_LOCATION(4, "Update Location"),
     ACTIVATE_LOCATION(5, "Activate Location"),
     DEACTIVATE_LOCATION(6, "Deactivate Location"),
-    EXIT(0, "Back to Main Menu");
+    BACK(0, "Back to Main Menu");
 
     private final int number;
     private final String description;
