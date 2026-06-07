@@ -21,11 +21,11 @@ public final class UserManagementCli {
 
   private static final String BANNER =
       """
-      ==========================================
-           EcoResidues - Users Management
-      ==========================================""";
+      ===========================================
+        EcoResidues - Residue Management System
+      ===========================================""";
 
-  private static final String MENU_BORDER = "  ==========================================";
+  private static final String MENU_BORDER = "  ===========================================";
 
   private final UserController userController;
   private final ConsoleIO console;
