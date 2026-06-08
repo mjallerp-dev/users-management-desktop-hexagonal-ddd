@@ -2,7 +2,7 @@ package co.edu.udc.desechos_fabrica.user.domain.event;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
@@ -25,10 +25,11 @@ import org.junit.jupiter.api.Test;
 class UserUpdatedDomainEventTest {
 
   // ── Arranges globales
+  private static final Long ID = 1L;
   private static final String FIRST_NAME = "Jane";
   private static final String LAST_NAME = "Doe";
   private static final String EMAIL = "jane.doe@example.com";
-  private static final String NIT = "123456789";
+  private static final Long ENTERPRISE_ID = 2L;
   // fromHash() acepta cualquier string no-null: evita el coste de BCrypt en tests
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
@@ -38,13 +39,14 @@ class UserUpdatedDomainEventTest {
   void setUp() {
     user =
         new UserModel(
+            ID,
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
-            new EnterpriseNit(NIT),
             UserPassword.fromHash(HASH),
             UserRole.ADMIN,
-            UserStatus.INACTIVE);
+            UserStatus.INACTIVE,
+            new EnterpriseId(ENTERPRISE_ID));
   }
 
   // ── eventName
@@ -109,16 +111,18 @@ class UserUpdatedDomainEventTest {
     final UserUpdatedDomainEvent event = new UserUpdatedDomainEvent(user);
 
     // Act
-    final Map<String, String> payload = event.payload();
+    final var payload = event.payload();
 
     // Assert
     assertAll(
         "payload de UserUpdatedDomainEvent",
-        () -> assertEquals(5, payload.size(), "tamaño del mapa"),
+        () -> assertEquals(7, payload.size(), "tamaño del mapa"),
+        () -> assertEquals(String.valueOf(ID), payload.get("id"), "id"),
         () -> assertEquals(FIRST_NAME, payload.get("firstName"), "firstName"),
         () -> assertEquals(LAST_NAME, payload.get("lastName"), "lastName"),
         () -> assertEquals(EMAIL, payload.get("email"), "email"),
         () -> assertEquals(UserRole.ADMIN.name(), payload.get("role"), "role"),
-        () -> assertEquals(UserStatus.INACTIVE.name(), payload.get("status"), "status"));
+        () -> assertEquals(UserStatus.INACTIVE.name(), payload.get("status"), "status"),
+        () -> assertEquals(String.valueOf(ENTERPRISE_ID), payload.get("enterpriseId"), "enterpriseId"));
   }
 }

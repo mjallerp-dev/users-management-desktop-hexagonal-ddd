@@ -1,8 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto;
 
 public record UpdateUserRequest(
-    String actorEmail,
-    String targetEmail,
+    String currentEmail,
     String newFirstName,
     String newLastName,
     String newEmail,

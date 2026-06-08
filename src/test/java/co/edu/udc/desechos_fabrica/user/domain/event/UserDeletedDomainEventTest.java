@@ -84,7 +84,7 @@ class UserDeletedDomainEventTest {
     final UserDeletedDomainEvent event = new UserDeletedDomainEvent(new UserEmail(EMAIL));
 
     // Act
-    final Map<String, String> payload = event.payload();
+    final var payload = event.payload();
 
     // Assert
     assertAll(

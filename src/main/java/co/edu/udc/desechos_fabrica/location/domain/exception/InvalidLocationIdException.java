@@ -4,14 +4,14 @@ import co.edu.udc.desechos_fabrica.shared.domain.DomainException;
 
 public class InvalidLocationIdException extends DomainException{
 
-    private static final String MESSAGE_EMPTY = "The location id must not be empty.";
+    private static final String MESSAGE_NULL = "The location id must not be null.";
 
     private InvalidLocationIdException(final String message) {
         super(message);
     }
 
-    public static InvalidLocationIdException becauseValueIsEmpty() {
-        return new InvalidLocationIdException(MESSAGE_EMPTY);
+    public static InvalidLocationIdException becauseValueIsNull() {
+        return new InvalidLocationIdException(MESSAGE_NULL);
     }
 
     public static InvalidLocationIdException becauseInvalidFormat() {

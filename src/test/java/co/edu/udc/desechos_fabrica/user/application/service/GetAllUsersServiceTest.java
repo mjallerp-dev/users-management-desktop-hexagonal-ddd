@@ -3,6 +3,7 @@ package co.edu.udc.desechos_fabrica.user.application.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetAllUsersPort;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
@@ -46,13 +47,14 @@ class GetAllUsersServiceTest {
     // Arrange
     final UserModel user =
         new UserModel(
+            1L,
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
-            new EnterpriseNit("123456789"),
             UserPassword.fromHash("$2a$12$abcdefghijklmnopqrstuO"),
             UserRole.REVIEWER,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            new EnterpriseId(4L));
 
     when(getAllUsersPort.getAll()).thenReturn(List.of(user));
 
@@ -63,7 +65,7 @@ class GetAllUsersServiceTest {
     assertAll(
         "getAll con un usuario",
         () -> assertEquals(1, result.size(), "debe retornar exactamente un usuario"),
-        () -> assertSame(user, result.get(0), "debe ser el mismo objeto del puerto"));
+        () -> assertSame(user, result.getFirst(), "debe ser el mismo objeto del puerto"));
   }
 
   // ── lista vacía

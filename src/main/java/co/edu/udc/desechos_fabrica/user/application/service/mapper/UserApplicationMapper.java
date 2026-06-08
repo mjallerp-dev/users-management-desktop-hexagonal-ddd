@@ -7,10 +7,12 @@ import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUs
 import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
+import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.*;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UserResponse;
 import lombok.experimental.UtilityClass;
@@ -59,6 +61,12 @@ public class UserApplicationMapper {
         enterpriseId
     );
   }
+
+    public static UserModel toModel(Optional<UserResponse> optionalUser) {
+        return optionalUser
+                .map(UserApplicationMapper::toModel)
+                .orElseThrow(PermissionDeniedException::becauseSessionIsInactive);
+    }
 
   public UserEmail fromGetUserByEmailQueryToUserEmail(final GetUserByEmailQuery query) {
     return new UserEmail(query.email());

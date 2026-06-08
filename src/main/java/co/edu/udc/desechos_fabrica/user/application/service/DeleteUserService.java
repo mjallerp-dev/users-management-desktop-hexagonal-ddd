@@ -1,9 +1,12 @@
 package co.edu.udc.desechos_fabrica.user.application.service;
 
+import co.edu.udc.desechos_fabrica.shared.infrastructure.session.SessionManager;
 import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.out.DeleteUserPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUserCommand;
+import co.edu.udc.desechos_fabrica.user.application.service.mapper.UserApplicationMapper;
+import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
@@ -27,7 +30,10 @@ public final class DeleteUserService implements DeleteUserUseCase {
   public void execute(final DeleteUserCommand command) {
     validateCommand(command);
 
-    final UserModel actor = findExistingUserOrFail(new UserEmail(command.actorEmail()));
+    if (!SessionManager.isLoggedIn()){
+      throw PermissionDeniedException.becauseSessionIsInactive();
+    }
+    final UserModel actor = UserApplicationMapper.toModel(SessionManager.getCurrentUser());
     final UserModel targetUser = findExistingUserOrFail(new UserEmail(command.email()));
 
     userRoleManager.checkDeletePermissions(actor, targetUser);

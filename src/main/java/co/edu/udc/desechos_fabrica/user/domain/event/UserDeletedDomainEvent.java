@@ -3,7 +3,6 @@ package co.edu.udc.desechos_fabrica.user.domain.event;
 import co.edu.udc.desechos_fabrica.shared.domain.DomainEvent;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 
-import java.io.Serializable;
 import java.util.Map;
 import lombok.Getter;
 
@@ -20,7 +19,7 @@ public final class UserDeletedDomainEvent extends DomainEvent {
   }
 
   @Override
-  public Map<String, Serializable> payload() {
+  public Map<String, Object> payload() {
     return Map.of("email", userEmail.value());
   }
 }

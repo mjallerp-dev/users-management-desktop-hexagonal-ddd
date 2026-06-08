@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.menu.MenuOption;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.session.SessionManager;
+import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UserResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +39,7 @@ public enum UserMenuOption implements MenuOption {
     return switch (this) {
       case LOGIN -> !loggedIn;
       case LOGOUT, LIST_USERS, FIND_USER, UPDATE_USER, DELETE_USER -> loggedIn;
-      case CREATE_USER -> loggedIn && "ADMIN".equals(SessionManager.getCurrentUser().map(u -> u.role()).orElse(""));
+      case CREATE_USER -> loggedIn && "ADMIN".equals(SessionManager.getCurrentUser().map(UserResponse::role).orElse(""));
       case EXIT -> true;
     };
   }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.SaveUserPort;
@@ -61,17 +62,18 @@ class CreateUserServiceTest {
   void shouldSaveUserAndNotifyWhenEmailIsNew() {
     // Arrange
     final CreateUserCommand command =
-        new CreateUserCommand("John", "Arrieta", "john@example.com", "Pass1234", "ADMIN");
+        new CreateUserCommand("John", "Arrieta", "john@example.com", "Pass1234", "ADMIN", null);
 
     final UserModel savedUser =
         new UserModel(
+            null,
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail("john@example.com"),
-            new EnterpriseNit("123456789"),
             UserPassword.fromPlainText("Pass1234"),
             UserRole.REVIEWER,
-            UserStatus.PENDING);
+            UserStatus.PENDING,
+            new EnterpriseId(1L));
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.empty());
     when(saveUserPort.save(any())).thenReturn(savedUser);
@@ -96,17 +98,18 @@ class CreateUserServiceTest {
   void shouldThrowWhenEmailAlreadyExists() {
     // Arrange
     final CreateUserCommand command =
-        new CreateUserCommand("Jane", "Doe", "jane@example.com", "Pass5678", "MEMBER");
+        new CreateUserCommand("Jane", "Doe", "jane@example.com", "Pass5678", "MEMBER", 2L);
 
     final UserModel existing =
         new UserModel(
+            null,
             new UserFirstName("Jane"),
             new UserLastName("Doe"),
             new UserEmail("jane@example.com"),
-            new EnterpriseNit("987654321"),
             UserPassword.fromPlainText("OtraPass1"),
             UserRole.MEMBER,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            new EnterpriseId(2L));
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(existing));
 
@@ -124,7 +127,7 @@ class CreateUserServiceTest {
   void shouldThrowWhenCommandIsInvalid() {
     // Arrange — id en blanco y email inválido
     final CreateUserCommand command =
-        new CreateUserCommand("Jo", "Ar", "not-an-email", "short", "ADMIN");
+        new CreateUserCommand("Jo", "Ar", "not-an-email", "short", "ADMIN",100L);
 
     // Act & Assert
     assertThrows(ConstraintViolationException.class, () -> service.execute(command));

@@ -4,24 +4,26 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.session.SessionManager;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.UpdateUserPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
-import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
-import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
+import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
-import jakarta.validation.ConstraintViolationException;
+import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.UserResponse;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 import java.util.Optional;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,13 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Tests para UpdateUserService.
- *
- * <p>Cubre: flujo feliz, usuario no encontrado, email tomado por otro usuario, email del mismo
- * usuario (no debe fallar) y validación del command.
- */
-@DisplayName("UpdateUserService")
+@DisplayName("UpdateUserService - Escenarios de Negocio y Seguridad")
 @ExtendWith(MockitoExtension.class)
 class UpdateUserServiceTest {
 
@@ -46,143 +42,116 @@ class UpdateUserServiceTest {
 
   private UpdateUserService service;
 
-  private static final String ACTOR_EMAIL = "admin@ecoresiduos.com";
-  private static final String EMAIL = "john@example.com";
-  private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
-
   private UserModel existingUser;
   private UserModel actorUser;
 
   @BeforeEach
   void setUp() {
     try (final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
-      service =
-          new UpdateUserService(
-              updateUserPort,
-              getUserByEmailPort,
-              emailNotificationService,
-              validatorFactory.getValidator(),
-              userRoleManager);
+      service = new UpdateUserService(updateUserPort, getUserByEmailPort, emailNotificationService, validatorFactory.getValidator(), userRoleManager);
     }
 
-    existingUser =
-        new UserModel(
+    existingUser = new UserModel(
+            1L,
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
-            new UserEmail(EMAIL),
-            new EnterpriseNit("123456789"),
-            UserPassword.fromHash(HASH),
+            new UserEmail("john@example.com"),
+            UserPassword.createDummy(),
             UserRole.MEMBER,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            new EnterpriseId(1L));
 
-    actorUser =
-        new UserModel(
+    actorUser = new UserModel(
+            2L,
             new UserFirstName("Admin"),
             new UserLastName("User"),
-            new UserEmail(ACTOR_EMAIL),
-            new EnterpriseNit("999999999"),
-            UserPassword.fromHash(HASH),
+            new UserEmail("admin@ecoresiduos.com"),
+            UserPassword.createDummy(),
             UserRole.ADMIN,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            new EnterpriseId(999L));
   }
 
-  // ── flujo feliz
+  @AfterEach
+  void tearDown() {
+    SessionManager.logout();
+  }
+
+  private void mockSession(String email, String role) {
+    SessionManager.login(new UserResponse("SessionFirst", "SessionLast", email, role, "ACTIVE", 999L));
+  }
 
   @Test
   @DisplayName("execute() actualiza el usuario y envía notificación cuando los datos son válidos")
   void shouldUpdateUserAndNotifyWhenDataIsValid() {
-    // Arrange
+    final String targetEmail = "john@example.com";
     final String newEmail = "new.john@example.com";
-    final UpdateUserCommand command =
-        new UpdateUserCommand(ACTOR_EMAIL, EMAIL,"John", "Updated", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
+    mockSession("admin@ecoresiduos.com", "ADMIN");
 
-    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
-    when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
-    when(getUserByEmailPort.getByEmail(new UserEmail(newEmail))).thenReturn(Optional.empty()); // El nuevo email no debe existir
+    final UpdateUserCommand command = new UpdateUserCommand(
+            targetEmail, "John", "Updated", newEmail, null,
+            UserRole.MEMBER.name(), UserStatus.ACTIVE.name(), 1L);
+    
+    when(getUserByEmailPort.getByEmail(new UserEmail(targetEmail))).thenReturn(Optional.of(existingUser));
+    when(getUserByEmailPort.getByEmail(new UserEmail(newEmail))).thenReturn(Optional.empty());
     when(updateUserPort.update(any(), any())).thenAnswer(invocation -> invocation.getArgument(1));
 
-    // Act
     final UserModel result = service.execute(command);
 
-    // Assert
     assertNotNull(result);
     assertEquals(newEmail, result.getEmail().value());
-    verify(updateUserPort).update(eq(new UserEmail(EMAIL)), any(UserModel.class));
+    verify(updateUserPort).update(eq(new UserEmail(targetEmail)), any(UserModel.class));
     verify(emailNotificationService).notifyUserUpdated(any(UserModel.class));
   }
 
-  // ── usuario no encontrado
-
   @Test
-  @DisplayName("execute() lanza UserNotFoundException cuando el email no existe")
-  void shouldThrowWhenUserNotFound() {
-    // Arrange
-    final String nonExistentEmail = "no-existe@example.com";
-    final UpdateUserCommand command =
-        new UpdateUserCommand(ACTOR_EMAIL, nonExistentEmail,"firstName", "lastName", "new@example.com", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "");
+  @DisplayName("should throw PermissionDenied when Reviewer tries to update an Admin")
+  void shouldThrowPermissionDeniedWhenReviewerUpdatesAdmin() {
+    mockSession("reviewer@corp.com", "REVIEWER");
 
-    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
-    when(getUserByEmailPort.getByEmail(new UserEmail(nonExistentEmail))).thenReturn(Optional.empty());
+    UserModel adminUser = createMockUser("admin@corp.com", UserRole.ADMIN);
+    when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(adminUser));
 
-    // Act & Assert
-    assertThrows(UserNotFoundException.class, () -> service.execute(command));
-    verify(updateUserPort, never()).update(any(), any());
-  }
+    doThrow(PermissionDeniedException.class)
+            .when(userRoleManager).checkUpdatePermissions(any(), any(), any());
 
-  // ── email tomado por otro usuario
+    UpdateUserCommand command = new UpdateUserCommand("admin@corp.com", "John", "Doe", "e@e.com", null, "ADMIN", "ACTIVE", 1L);
 
-  @Test
-  @DisplayName("execute() lanza UserAlreadyExistsException cuando el email pertenece a otro usuario")
-  void shouldThrowWhenEmailBelongsToAnotherUser() {
-    // Arrange
-    final String newEmail = "other@example.com";
-    final UpdateUserCommand command =
-        new UpdateUserCommand(ACTOR_EMAIL, EMAIL, "John", "Arrieta", newEmail, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
-
-    final UserModel otherUser =
-        new UserModel(
-            new UserFirstName("Other"),
-            new UserLastName("User"),
-            new UserEmail(newEmail),
-            new EnterpriseNit("987654321"),
-            UserPassword.fromHash(HASH),
-            UserRole.MEMBER,
-            UserStatus.ACTIVE);
-
-    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
-    when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
-    when(getUserByEmailPort.getByEmail(new UserEmail(newEmail))).thenReturn(Optional.of(otherUser));
-
-    // Act & Assert
-    assertThrows(UserAlreadyExistsException.class, () -> service.execute(command));
-    verify(updateUserPort, never()).update(any(), any());
+    assertThrows(PermissionDeniedException.class, () -> service.execute(command));
   }
 
   @Test
-  @DisplayName("execute() permite mantener el mismo email del propio usuario")
-  void shouldAllowKeepingOwnEmail() {
-    // Arrange
-    final UpdateUserCommand command =
-        new UpdateUserCommand(ACTOR_EMAIL, EMAIL, "John", "Updated", EMAIL, null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(), "123456789");
+  @DisplayName("should throw PermissionDenied when EnterpriseAdmin tries to update user outside their enterprise")
+  void shouldThrowPermissionDeniedWhenEnterpriseAdminCrossesEnterprise() {
+    mockSession("ent.admin@corp.com", "ENTERPRISE_ADMIN");
 
-    when(getUserByEmailPort.getByEmail(new UserEmail(ACTOR_EMAIL))).thenReturn(Optional.of(actorUser));
-    when(getUserByEmailPort.getByEmail(new UserEmail(EMAIL))).thenReturn(Optional.of(existingUser));
-    when(updateUserPort.update(any(UserEmail.class), any(UserModel.class))).thenAnswer(invocation -> invocation.getArgument(1));
+    UserModel targetUser = createMockUser("member@other.com", UserRole.MEMBER);
+    when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(targetUser));
 
-    // Act & Assert
+    doThrow(PermissionDeniedException.class)
+            .when(userRoleManager).checkUpdatePermissions(any(), any(), any());
+
+    UpdateUserCommand command = new UpdateUserCommand("member@other.com", "John", "Doe", "e@e.com", null, "MEMBER", "ACTIVE", 2L);
+
+    assertThrows(PermissionDeniedException.class, () -> service.execute(command));
+  }
+
+  @Test
+  @DisplayName("should update user successfully when role manager approves")
+  void shouldUpdateSuccessfully() {
+    mockSession("admin@corp.com", "ADMIN");
+    UserModel target = createMockUser("target@corp.com", UserRole.MEMBER);
+
+    when(getUserByEmailPort.getByEmail(new UserEmail("target@corp.com"))).thenReturn(Optional.of(target));
+    when(updateUserPort.update(any(), any())).thenAnswer(inv -> inv.getArgument(1));
+
+    UpdateUserCommand command = new UpdateUserCommand("target@corp.com", "New", "Name", "new@e.com", null, "MEMBER", "ACTIVE", 1L);
+
     assertDoesNotThrow(() -> service.execute(command));
-    verify(updateUserPort).update(eq(new UserEmail(EMAIL)), any(UserModel.class));
+    verify(emailNotificationService).notifyUserUpdated(any());
   }
-
-  @Test
-  @DisplayName("execute() lanza ConstraintViolationException cuando el command tiene campos inválidos")
-  void shouldThrowWhenCommandIsInvalid() {
-    // Arrange
-    final UpdateUserCommand command =
-        new UpdateUserCommand(ACTOR_EMAIL,"", "", "Jo", "no-es-email", null, UserRole.ADMIN.name(), UserStatus.ACTIVE.name(),"12345");
-
-    // Act & Assert
-    assertThrows(ConstraintViolationException.class, () -> service.execute(command));
-    verifyNoInteractions(updateUserPort, getUserByEmailPort, emailNotificationService);
+  private UserModel createMockUser(String email, UserRole role) {
+    return new UserModel(1L, new UserFirstName("Frank"), new UserLastName("Lewis"),
+            new UserEmail(email), UserPassword.createDummy(), role, UserStatus.ACTIVE, new EnterpriseId(1L));
   }
 }

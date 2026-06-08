@@ -101,6 +101,8 @@ public final class UserRepositoryPostgresSQL
   }
 
   private Long executeSaveAndGetId(final UserPersistenceDto dto) {
+    final Long generatedId;
+
     try (final PreparedStatement statement = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
       statement.setString(1, dto.firstName());
       statement.setString(2, dto.lastName());
@@ -119,13 +121,20 @@ public final class UserRepositoryPostgresSQL
 
       try (final ResultSet generatedKeys = statement.getGeneratedKeys()) {
         if (generatedKeys.next()) {
-          return generatedKeys.getLong(1);
+          generatedId = generatedKeys.getLong(1);
+        } else {
+          generatedId = null;
         }
-        throw new SQLException("The saved user not generated an ID.");
       }
     } catch (final SQLException exception) {
       throw PersistenceException.becauseSaveFailed(dto.email(), exception);
     }
+
+    if (generatedId == null) {
+      throw new UserNotFoundException("The saved user could not be found or ID was not generated.");
+    }
+
+    return generatedId;
   }
 
   private void executeUpdate(final UserEmail currentEmail, final UserPersistenceDto dto) {

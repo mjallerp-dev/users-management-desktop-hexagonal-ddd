@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller;
 
 import co.edu.udc.desechos_fabrica.user.application.port.in.*;
+import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
@@ -43,14 +44,24 @@ public final class UserController {
     return UserDesktopMapper.toResponse(user);
   }
 
-  public UserResponse updateUser(final UpdateUserRequest request) {
-    final var command = UserDesktopMapper.toUpdateCommand(request);
-    final var user = updateUserUseCase.execute(command);
-    return UserDesktopMapper.toResponse(user);
+  public UserResponse updateUser(UpdateUserRequest request) {
+    UpdateUserCommand command = new UpdateUserCommand(
+            request.currentEmail(),
+            request.newFirstName(),
+            request.newLastName(),
+            request.newEmail(),
+            request.password(),
+            request.role(),
+            request.status(),
+            request.enterpriseId()
+    );
+
+    UserModel updatedUser = updateUserUseCase.execute(command);
+    return UserDesktopMapper.toResponse(updatedUser);
   }
 
-  public void deleteUser(final String actorEmail, final String targetEmail) {
-    final var command = UserDesktopMapper.toDeleteCommand(actorEmail, targetEmail);
+  public void deleteUser(final String targetEmail) {
+    final var command = UserDesktopMapper.toDeleteCommand(targetEmail);
     deleteUserUseCase.execute(command);
   }
 

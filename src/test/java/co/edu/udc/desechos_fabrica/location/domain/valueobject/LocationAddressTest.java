@@ -22,13 +22,13 @@ public class LocationAddressTest {
     @DisplayName("Should throw exception when creating LocationAddress with value shorter than minimum length")
     public void testShortLocationAddressCreation() {
         final String shortAddress = "ab";
-        assertThrows(InvalidLocationAddressException.class, () -> new LocationName(shortAddress));
+        assertThrows(InvalidLocationAddressException.class, () -> new LocationAddress(shortAddress));
     }
 
     @ParameterizedTest
     @DisplayName("Should throw exception when creating LocationAddress with empty value")
     @ValueSource(strings = {"", " "})
     public void testEmptyLocationAddressCreation(String emptyAddress) {
-        assertThrows(InvalidLocationAddressException.class, () -> new LocationName(emptyAddress));
+        assertThrows(InvalidLocationAddressException.class, () -> new LocationAddress(emptyAddress));
     }
 }

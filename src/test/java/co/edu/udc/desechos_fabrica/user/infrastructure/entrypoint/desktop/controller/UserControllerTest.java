@@ -10,7 +10,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.user.application.port.in.CreateUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.DeleteUserUseCase;
 import co.edu.udc.desechos_fabrica.user.application.port.in.GetAllUsersUseCase;
@@ -45,19 +45,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * Tests for UserController.
- *
- * <p>Covers: correct delegation to every use-case port, accurate DTO→command/query mapping,
- * accurate domain-model→response mapping, and transparent exception propagation. All ports are
- * mocked; no infrastructure is exercised.
- */
 @DisplayName("UserController")
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
   private static final String BCRYPT_HASH =
-      "$2a$12$abcdefghijklmnopqrstabcdefghijklmnñopqrstuvwxyzabcdefgh";
+          "$2a$12$abcdefghijklmnopqrstabcdefghijklmnñopqrstuvwxyzabcdefgh";
 
   @Mock private CreateUserUseCase createUserUseCase;
   @Mock private UpdateUserUseCase updateUserUseCase;
@@ -68,197 +61,140 @@ class UserControllerTest {
 
   private UserController controller;
 
-  // ── helpers
-
   private static UserModel buildUser(
-      final String firstName,
-      final String lastName,
-      final String email,
-      final String nit,
-      final UserRole role,
-      final UserStatus status) {
+          final String firstName,
+          final String lastName,
+          final String email,
+          final UserRole role,
+          final UserStatus status,
+          final Long enterpriseId) {
     return new UserModel(
-        new UserFirstName(firstName),
-        new UserLastName(lastName),
-        new UserEmail(email),
-        new EnterpriseNit(nit),
-        UserPassword.fromHash(BCRYPT_HASH),
-        role,
-        status);
+            null,
+            new UserFirstName(firstName),
+            new UserLastName(lastName),
+            new UserEmail(email),
+            UserPassword.fromHash(BCRYPT_HASH),
+            role,
+            status,
+            new EnterpriseId(enterpriseId));
   }
 
   @BeforeEach
   void setUp() {
     controller =
-        new UserController(
-            createUserUseCase,
-            updateUserUseCase,
-            deleteUserUseCase,
-            getUserByEmailUseCase,
-            getAllUsersUseCase,
-            loginUseCase);
+            new UserController(
+                    createUserUseCase,
+                    updateUserUseCase,
+                    deleteUserUseCase,
+                    getUserByEmailUseCase,
+                    getAllUsersUseCase,
+                    loginUseCase);
   }
 
   // ── listAllUsers
 
   @Test
-  @DisplayName(
-      "listAllUsers() returns a correctly mapped UserResponse list when the use case returns users")
+  @DisplayName("listAllUsers() returns a correctly mapped UserResponse list when the use case returns users")
   void listAllUsers_returnsMappedResponseList_whenUsersExist() {
-    // Arrange
-    final UserModel user =
-        buildUser("Alice", "Smith", "alice@example.com", "1234567890", UserRole.ADMIN, UserStatus.ACTIVE);
+    final UserModel user = buildUser("Alice", "Smith", "alice@example.com", UserRole.ADMIN, UserStatus.ACTIVE, 2L);
     when(getAllUsersUseCase.execute()).thenReturn(List.of(user));
 
-    // Act
     final List<UserResponse> result = controller.listAllUsers();
 
-    // Assert
     assertAll(
-        "single-user list mapping",
-        () -> assertEquals(1, result.size(), "list must contain exactly one element"),
-        () -> assertEquals("Alice", result.get(0).firstName(), "first name must match"),
-        () -> assertEquals("Smith", result.get(0).lastName(), "last name must match"),
-        () -> assertEquals("alice@example.com", result.get(0).email(), "email must match"),
-        () -> assertEquals("ADMIN", result.get(0).role(), "role must match enum name"),
-        () -> assertEquals("ACTIVE", result.get(0).status(), "status must match enum name"));
+            "single-user list mapping",
+            () -> assertEquals(1, result.size()),
+            () -> assertEquals("Alice", result.getFirst().firstName()),
+            () -> assertEquals("Smith", result.getFirst().lastName()),
+            () -> assertEquals("alice@example.com", result.getFirst().email()),
+            () -> assertEquals("ADMIN", result.getFirst().role()),
+            () -> assertEquals("ACTIVE", result.getFirst().status()));
     verify(getAllUsersUseCase).execute();
   }
 
   @Test
   @DisplayName("listAllUsers() returns an empty list when the use case returns no users")
   void listAllUsers_returnsEmptyList_whenNoUsersExist() {
-    // Arrange
     when(getAllUsersUseCase.execute()).thenReturn(List.of());
 
-    // Act
     final List<UserResponse> result = controller.listAllUsers();
 
-    // Assert
-    assertTrue(result.isEmpty(), "result must be an empty list");
+    assertTrue(result.isEmpty());
     verify(getAllUsersUseCase).execute();
   }
 
   // ── findUserByEmail
 
   @Test
-  @DisplayName(
-      "findUserByEmail() builds a GetUserByIdQuery with the given id and returns the mapped response")
+  @DisplayName("findUserByEmail() builds a GetUserByIdQuery with the given id and returns the mapped response")
   void findUserByEmail_returnsMappedResponse_whenUserExists() {
-    // Arrange
     final String email = "bob@example.com";
-    final UserModel user =
-        buildUser("Bob", "Jones", email, "123456789", UserRole.MEMBER, UserStatus.ACTIVE);
+    final UserModel user = buildUser("Bob", "Jones", email, UserRole.MEMBER, UserStatus.ACTIVE, 2L);
     when(getUserByEmailUseCase.execute(any(GetUserByEmailQuery.class))).thenReturn(user);
 
-    // Act
     final UserResponse result = controller.findUserByEmail(email);
 
-    // Assert
     assertAll(
-        "findUserByEmail response mapping",
-        () -> assertEquals("Bob", result.firstName(), "first name must match"),
-        () -> assertEquals("Jones", result.lastName(), "last name must match"),
-        () -> assertEquals(email, result.email(), "email must match"),
-        () -> assertEquals("MEMBER", result.role(), "role must match enum name"),
-        () -> assertEquals("ACTIVE", result.status(), "status must match enum name"));
+            "findUserByEmail response mapping",
+            () -> assertEquals("Bob", result.firstName()),
+            () -> assertEquals("Jones", result.lastName()),
+            () -> assertEquals(email, result.email()),
+            () -> assertEquals("MEMBER", result.role()),
+            () -> assertEquals("ACTIVE", result.status()));
   }
 
   @Test
-  @DisplayName(
-      "findUserByEmail() propagates UserNotFoundException when the use case cannot find the user")
+  @DisplayName("findUserByEmail() propagates UserNotFoundException when the use case cannot find the user")
   void findUserByEmail_propagatesUserNotFoundException_whenUserDoesNotExist() {
-    // Arrange
     final String email = "bob@example.com";
     when(getUserByEmailUseCase.execute(any(GetUserByEmailQuery.class)))
-        .thenThrow(UserNotFoundException.becauseEmailWasNotFound(email));
+            .thenThrow(UserNotFoundException.becauseEmailWasNotFound(email));
 
-    // Act & Assert
-    assertThrows(
-        UserNotFoundException.class,
-        () -> controller.findUserByEmail(email),
-        "UserNotFoundException must propagate without being wrapped");
+    assertThrows(UserNotFoundException.class, () -> controller.findUserByEmail(email));
   }
 
   // ── createUser
 
   @Test
-  @DisplayName(
-      "createUser() delegates a correctly populated CreateUserCommand and returns the mapped response")
+  @DisplayName("createUser() delegates a correctly populated CreateUserCommand and returns the mapped response")
   void createUser_delegatesCorrectCommandAndReturnsMappedResponse_whenCreationSucceeds() {
-    // Arrange
-    final CreateUserRequest request =
-        new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", UserRole.MEMBER);
-    final UserModel createdUser =
-        buildUser(
-            "Carol", "White", "carol@example.com", "123456789", UserRole.MEMBER, UserStatus.PENDING);
-    final ArgumentCaptor<CreateUserCommand> captor =
-        ArgumentCaptor.forClass(CreateUserCommand.class);
+    final CreateUserRequest request = new CreateUserRequest("Carol", "White", "carol@example.com", "Pass1234", UserRole.MEMBER, 1L);
+    final UserModel createdUser = buildUser("Carol", "White", "carol@example.com", UserRole.MEMBER, UserStatus.PENDING, 1L);
+    final ArgumentCaptor<CreateUserCommand> captor = ArgumentCaptor.forClass(CreateUserCommand.class);
     when(createUserUseCase.execute(captor.capture())).thenReturn(createdUser);
 
-    // Act
     final UserResponse result = controller.createUser(request);
 
-    // Assert
     assertAll(
-        "createUser command delegation and response mapping",
-        () ->
-            assertEquals(
-                "Carol", captor.getValue().firstName(), "command firstName name must match request first name"),
-        () ->
-            assertEquals(
-                "White", captor.getValue().lastName(), "command lastName must match request last name"),
-        () ->
-            assertEquals(
-                "carol@example.com",
-                captor.getValue().email(),
-                "command email must match request email"),
-        () ->
-            assertEquals(
-                "Pass1234",
-                captor.getValue().password(),
-                "command password must match request password"),
-        () ->
-            assertEquals(
-                "MEMBER", captor.getValue().role(), "command role must match request role"),
-        () ->
-            assertEquals(
-                "PENDING",
-                result.status(),
-                "response status must reflect the domain model status"));
+            "createUser command delegation and response mapping",
+            () -> assertEquals("Carol", captor.getValue().firstName()),
+            () -> assertEquals("White", captor.getValue().lastName()),
+            () -> assertEquals("carol@example.com", captor.getValue().email()),
+            () -> assertEquals("Pass1234", captor.getValue().password()),
+            () -> assertEquals("MEMBER", captor.getValue().role()),
+            () -> assertEquals("PENDING", result.status()));
   }
 
   @Test
-  @DisplayName(
-      "createUser() propagates UserAlreadyExistsException when the use case rejects a duplicate email")
+  @DisplayName("createUser() propagates UserAlreadyExistsException when the use case rejects a duplicate email")
   void createUser_propagatesUserAlreadyExistsException_whenEmailIsDuplicated() {
-    // Arrange
-    final CreateUserRequest request =
-        new CreateUserRequest("Dave", "Brown", "dave@example.com", "Pass5678", UserRole.MEMBER);
-    when(createUserUseCase.execute(any()))
-        .thenThrow(UserAlreadyExistsException.becauseEmailAlreadyExists("dave@example.com"));
+    final CreateUserRequest request = new CreateUserRequest("Dave", "Brown", "dave@example.com", "Pass5678", UserRole.MEMBER, 1L);
+    when(createUserUseCase.execute(any())).thenThrow(UserAlreadyExistsException.becauseEmailAlreadyExists("dave@example.com"));
 
-    // Act & Assert
-    assertThrows(
-        UserAlreadyExistsException.class,
-        () -> controller.createUser(request),
-        "UserAlreadyExistsException must propagate without being wrapped");
+    assertThrows(UserAlreadyExistsException.class, () -> controller.createUser(request));
   }
 
-  // ── updateUser
+  // ── updateUser (¡Modificado con Request y Captor!)
 
   @Test
-  @DisplayName(
-      "updateUser() delegates a correctly populated UpdateUserCommand and returns the mapped response")
+  @DisplayName("updateUser() mapea correctamente el Request al Command, delega al Use Case y retorna la respuesta")
   void updateUser_delegatesCorrectCommandAndReturnsMappedResponse_whenUpdateSucceeds() {
     // Arrange
-    final UpdateUserRequest request =
-        new UpdateUserRequest(
-                "admin@ecoresiduos.com","eve2@example.com", "Eve", "Martinez", "eve@example.com", "NewPass9!", "ADMIN", "ACTIVE", "123456789");
-    final UserModel updatedUser =
-        buildUser("Eve", "Martinez", "eve@example.com", "123456789", UserRole.ADMIN, UserStatus.ACTIVE);
-    final ArgumentCaptor<UpdateUserCommand> captor =
-        ArgumentCaptor.forClass(UpdateUserCommand.class);
+    final UpdateUserRequest request = new UpdateUserRequest(
+            "eve2@example.com", "Eve", "Martinez", "eve@example.com", "NewPass9!", "ADMIN", "ACTIVE", 2L);
+    final UserModel updatedUser = buildUser("Eve", "Martinez", "eve@example.com", UserRole.ADMIN, UserStatus.ACTIVE, 2L);
+
+    final ArgumentCaptor<UpdateUserCommand> captor = ArgumentCaptor.forClass(UpdateUserCommand.class);
     when(updateUserUseCase.execute(captor.capture())).thenReturn(updatedUser);
 
     // Act
@@ -266,49 +202,35 @@ class UserControllerTest {
 
     // Assert
     assertAll(
-        "updateUser command delegation and response mapping",
-        () ->
-            assertEquals(
-                "Eve", captor.getValue().newFirstName(), "command firstName must match request first name"),
-        () ->
-            assertEquals(
-                "Martinez", captor.getValue().newLastName(), "command lastName must match request last name"),
-        () ->
-            assertEquals(
-                "eve@example.com",
-                captor.getValue().newEmail(),
-                "command email must match request email"),
-        () ->
-            assertEquals(
-                "NewPass9!",
-                captor.getValue().password(),
-                "command password must match request password"),
-        () ->
-            assertEquals("ADMIN", captor.getValue().role(), "command role must match request role"),
-        () ->
-            assertEquals(
-                "ACTIVE", captor.getValue().status(), "command status must match request status"),
-        () ->
-            assertEquals(
-                "ADMIN", result.role(), "response role must reflect the domain model role"));
+            "Verificación del mapeo interno Request -> Command",
+            () -> assertEquals("Eve", captor.getValue().newFirstName(), "firstName mapeado incorrectamente"),
+            () -> assertEquals("Martinez", captor.getValue().newLastName(), "lastName mapeado incorrectamente"),
+            () -> assertEquals("eve@example.com", captor.getValue().newEmail(), "newEmail mapeado incorrectamente"),
+            () -> assertEquals("NewPass9!", captor.getValue().password(), "password mapeado incorrectamente"),
+            () -> assertEquals("ADMIN", captor.getValue().role(), "role mapeado incorrectamente"),
+            () -> assertEquals("ACTIVE", captor.getValue().status(), "status mapeado incorrectamente")
+    );
+
+    assertAll(
+            "Verificación del mapeo de salida Model -> Response",
+            () -> assertEquals("Eve", result.firstName()),
+            () -> assertEquals("eve@example.com", result.email()),
+            () -> assertEquals("ADMIN", result.role())
+    );
   }
 
   @Test
-  @DisplayName(
-      "updateUser() propagates UserNotFoundException when the use case cannot find the user")
+  @DisplayName("updateUser() propaga UserNotFoundException sin alterarla")
   void updateUser_propagatesUserNotFoundException_whenUserDoesNotExist() {
     // Arrange
-    final UpdateUserRequest request =
-        new UpdateUserRequest(
-            "admin@ecoresiduos.com","ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "ADMIN", "INACTIVE", "123456789");
-    when(updateUserUseCase.execute(any()))
-        .thenThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"));
+    final UpdateUserRequest request = new UpdateUserRequest(
+            "ghost2@example.com","Ghost", "User", "ghost@example.com", "Pass9999!", "ADMIN", "INACTIVE", 2L);
+
+    when(updateUserUseCase.execute(any(UpdateUserCommand.class)))
+            .thenThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"));
 
     // Act & Assert
-    assertThrows(
-        UserNotFoundException.class,
-        () -> controller.updateUser(request),
-        "UserNotFoundException must propagate without being wrapped");
+    assertThrows(UserNotFoundException.class, () -> controller.updateUser(request));
   }
 
   // ── deleteUser
@@ -316,86 +238,48 @@ class UserControllerTest {
   @Test
   @DisplayName("deleteUser() delegates a DeleteUserCommand with the given id to the use case")
   void deleteUser_delegatesDeleteCommandWithCorrectId() {
-    // Arrange
-    final ArgumentCaptor<DeleteUserCommand> captor =
-        ArgumentCaptor.forClass(DeleteUserCommand.class);
+    final ArgumentCaptor<DeleteUserCommand> captor = ArgumentCaptor.forClass(DeleteUserCommand.class);
     doNothing().when(deleteUserUseCase).execute(captor.capture());
 
-    // Act
-    controller.deleteUser("admin@ecoresiduos.com","ghost@example.com");
+    controller.deleteUser("ghost@example.com");
 
-    // Assert
-    assertEquals("ghost@example.com", captor.getValue().email(), "delete command email must match the provided email");
+    assertEquals("ghost@example.com", captor.getValue().email());
   }
 
   @Test
-  @DisplayName(
-      "deleteUser() propagates UserNotFoundException when the use case cannot find the user")
+  @DisplayName("deleteUser() propagates UserNotFoundException when the use case cannot find the user")
   void deleteUser_propagatesUserNotFoundException_whenUserDoesNotExist() {
-    // Arrange
-    doThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com"))
-        .when(deleteUserUseCase)
-        .execute(any());
+    doThrow(UserNotFoundException.becauseEmailWasNotFound("ghost@example.com")).when(deleteUserUseCase).execute(any());
 
-    // Act & Assert
-    assertThrows(
-        UserNotFoundException.class,
-        () -> controller.deleteUser("admin@ecoresiduos.com","ghost@example.com"),
-        "UserNotFoundException must propagate without being wrapped");
+    assertThrows(UserNotFoundException.class, () -> controller.deleteUser("ghost@example.com"));
   }
 
   // ── login
 
   @Test
-  @DisplayName(
-      "login() delegates a correctly populated LoginCommand and returns the mapped response")
+  @DisplayName("login() delegates a correctly populated LoginCommand and returns the mapped response")
   void login_delegatesCorrectCommandAndReturnsMappedResponse_whenCredentialsAreValid() {
-    // Arrange
     final LoginRequest request = new LoginRequest("frank@example.com", "Pass1234!");
-    final UserModel loggedUser =
-        buildUser("Frank", "Green", "frank@example.com", "123456789", UserRole.MEMBER, UserStatus.ACTIVE);
+    final UserModel loggedUser = buildUser("Frank", "Green", "frank@example.com", UserRole.MEMBER, UserStatus.ACTIVE, 2L);
     final ArgumentCaptor<LoginCommand> captor = ArgumentCaptor.forClass(LoginCommand.class);
     when(loginUseCase.execute(captor.capture())).thenReturn(loggedUser);
 
-    // Act
     final UserResponse result = controller.login(request);
 
-    // Assert
     assertAll(
-        "login command delegation and response mapping",
-        () ->
-            assertEquals(
-                "frank@example.com",
-                captor.getValue().email(),
-                "command email must match request email"),
-        () ->
-            assertEquals(
-                "Pass1234!",
-                captor.getValue().password(),
-                "command password must match request password"),
-        () ->
-            assertEquals(
-                "frank@example.com",
-                result.email(),
-                "response email must match the domain model email"),
-        () ->
-            assertEquals(
-                "ACTIVE", result.status(), "response status must reflect the domain model status"));
+            "login command delegation and response mapping",
+            () -> assertEquals("frank@example.com", captor.getValue().email()),
+            () -> assertEquals("Pass1234!", captor.getValue().password()),
+            () -> assertEquals("frank@example.com", result.email()),
+            () -> assertEquals("ACTIVE", result.status()));
   }
 
   @Test
-  @DisplayName(
-      "login() propagates InvalidCredentialsException when the use case rejects the credentials")
+  @DisplayName("login() propagates InvalidCredentialsException when the use case rejects the credentials")
   void login_propagatesInvalidCredentialsException_whenCredentialsAreInvalid() {
-    // Arrange
     final LoginRequest request = new LoginRequest("frank@example.com", "WrongPass1");
-    when(loginUseCase.execute(any()))
-        .thenThrow(InvalidCredentialsException.becauseCredentialsAreInvalid());
+    when(loginUseCase.execute(any())).thenThrow(InvalidCredentialsException.becauseCredentialsAreInvalid());
 
-    // Act & Assert
-    assertThrows(
-        InvalidCredentialsException.class,
-        () -> controller.login(request),
-        "InvalidCredentialsException must propagate without being wrapped");
+    assertThrows(InvalidCredentialsException.class, () -> controller.login(request));
   }
 }

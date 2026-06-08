@@ -3,7 +3,6 @@ package co.edu.udc.desechos_fabrica.location.domain.event;
 import co.edu.udc.desechos_fabrica.location.domain.model.LocationModel;
 import co.edu.udc.desechos_fabrica.shared.domain.DomainEvent;
 
-import java.io.Serializable;
 import java.util.Map;
 
 public class LocationUpdatedDomainEvent extends DomainEvent {
@@ -18,7 +17,7 @@ public class LocationUpdatedDomainEvent extends DomainEvent {
     }
 
     @Override
-    public Map<String, Serializable> payload() {
+    public Map<String, Object> payload() {
         return java.util.Map.of(
                 "locationId", location.getId().value(),
                 "name", location.getName().value(),

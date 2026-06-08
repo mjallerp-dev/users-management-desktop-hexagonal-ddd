@@ -1,14 +1,12 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler;
 
 import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.handler.OperationHandler;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.session.SessionManager;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.exception.PermissionDeniedException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserNotFoundException;
 import co.edu.udc.desechos_fabrica.user.domain.exception.UserAlreadyExistsException;
-import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
-import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
-import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManagerService;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.io.UserResponsePrinter;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.util.UserMenuHandler;
@@ -27,14 +25,12 @@ public final class UpdateUserHandler implements OperationHandler {
   @Override
   public void handle() {
     try {
-      final String actorEmail = console.readRequired("Enter your email (the actor) to proceed: ");
-      final String targetEmail = console.readRequired("Enter the email of the user to update (the target): ");
 
-      final UserModel actor = userController.findUserModelByEmail(actorEmail);
-      final UserModel targetUser = userController.findUserModelByEmail(targetEmail);
-      final UserRoleManager roleManager = new UserRoleManagerService();
+      if (!SessionManager.isLoggedIn()){
+        throw PermissionDeniedException.becauseSessionIsInactive();
+      }
 
-      roleManager.checkUpdatePermissions(actor, targetUser, null); // `null` para chequear permiso general
+      final String targetEmail = console.readRequired("Enter the email of the user to update: ");
 
       console.println("\nEnter the new data for the user:");
       final String newFirstName = console.readRequired              ("New first name                                 : ");
@@ -47,20 +43,20 @@ public final class UpdateUserHandler implements OperationHandler {
       final UserRole newRole = menuHandler.selectRoleFromConsole();
       final UserStatus newStatus = menuHandler.selectStatusFromConsole();
 
-      roleManager.checkUpdatePermissions(actor, targetUser, newRole);
+      final Long enterpriseIdToSend = (newEnterpriseId == null || newEnterpriseId == 0) ? null : newEnterpriseId;
 
-      final UserResponse updated = userController.updateUser(
-          new UpdateUserRequest(
-              actorEmail,
+      final UpdateUserRequest request = new UpdateUserRequest(
               targetEmail,
               newFirstName,
               newLastName,
               newEmail,
-              newPassword.isBlank() ? null : newPassword,
+              newPassword,
               newRole.name(),
               newStatus.name(),
-              newEnterpriseId
-          ));
+              enterpriseIdToSend
+      );
+
+      final UserResponse updated = userController.updateUser(request);
 
       console.println("\n  User updated successfully.");
       printer.print(updated);

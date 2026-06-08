@@ -27,12 +27,12 @@ public class MenuService {
                     UserMenuOption.LIST_USERS,
                     UserMenuOption.FIND_USER,
                     UserMenuOption.CREATE_USER,
-                    UserMenuOption.UPDATE_USER,
-                    UserMenuOption.CREATE_ENTERPRISE,
-                    UserMenuOption.UPDATE_ENTERPRISE,
-                    UserMenuOption.ACTIVATE_ENTERPRISE,
-                    UserMenuOption.DEACTIVATE_ENTERPRISE,
-                    LocationMenuOption.MANAGE_LOCATION
+                    UserMenuOption.UPDATE_USER//,
+                    //UserMenuOption.CREATE_ENTERPRISE,
+                    //UserMenuOption.UPDATE_ENTERPRISE,
+                    //UserMenuOption.ACTIVATE_ENTERPRISE,
+                    //UserMenuOption.DEACTIVATE_ENTERPRISE,
+                    //LocationMenuOption.MANAGE_LOCATION
             ));
         }
         if (userRole == UserRole.ENTERPRISE_ADMIN)
@@ -40,18 +40,18 @@ public class MenuService {
                     UserMenuOption.LIST_USERS,
                     UserMenuOption.FIND_USER,
                     UserMenuOption.CREATE_USER,
-                    UserMenuOption.UPDATE_USER,
-                    UserMenuOption.UPDATE_ENTERPRISE,
-                    UserMenuOption.ACTIVATE_ENTERPRISE,
-                    UserMenuOption.DEACTIVATE_ENTERPRISE,
-                    LocationMenuOption.MANAGE_LOCATION
+                    UserMenuOption.UPDATE_USER//,
+                    //UserMenuOption.UPDATE_ENTERPRISE,
+                    //UserMenuOption.ACTIVATE_ENTERPRISE,
+                    //UserMenuOption.DEACTIVATE_ENTERPRISE,
+                    //LocationMenuOption.MANAGE_LOCATION
             ));
         if (userRole == UserRole.MEMBER)
             options.addAll(List.of(
                     UserMenuOption.LIST_USERS,
                     UserMenuOption.FIND_USER,
-                    UserMenuOption.UPDATE_USER,
-                    LocationMenuOption.MANAGE_LOCATION
+                    UserMenuOption.UPDATE_USER//,
+                    //LocationMenuOption.MANAGE_LOCATION
 
             ));
         return options;

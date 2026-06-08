@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.LoginCommand;
@@ -60,13 +61,14 @@ class LoginServiceTest {
 
     final UserModel activeUser =
         new UserModel(
+            1L,
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
-            new EnterpriseNit("123456789"),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.REVIEWER,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            new EnterpriseId(2L));
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(activeUser));
 
@@ -101,13 +103,14 @@ class LoginServiceTest {
 
     final UserModel user =
         new UserModel(
+            1L,
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
-            new EnterpriseNit("123456789"),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.MEMBER,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            null);
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(user));
 
@@ -125,13 +128,14 @@ class LoginServiceTest {
 
     final UserModel pendingUser =
         new UserModel(
+                1L,
             new UserFirstName("John"),
             new UserLastName("Arrieta"),
             new UserEmail(EMAIL),
-            new EnterpriseNit("123456789"),
             UserPassword.fromPlainText(PASSWORD),
             UserRole.MEMBER,
-            UserStatus.PENDING);
+            UserStatus.PENDING,
+            null);
 
     when(getUserByEmailPort.getByEmail(any())).thenReturn(Optional.of(pendingUser));
 

@@ -7,7 +7,9 @@ import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationIdEx
 public record LocationId(Long value){
 
     public LocationId{
-        Objects.requireNonNull(value, "Location Id can not be null");
+        if (value == null){
+            throw InvalidLocationIdException.becauseValueIsNull();
+        }
         validateGreaterThanZero(value);
     }
 

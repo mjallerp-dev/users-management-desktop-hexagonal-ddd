@@ -6,7 +6,7 @@ public final class UserNotFoundException extends DomainException {
 
   private static final String MESSAGE_BY_EMAIL = "The user with email '%s' was not found.";
 
-  private UserNotFoundException(final String message) {
+  public UserNotFoundException(final String message) {
     super(message);
   }
 

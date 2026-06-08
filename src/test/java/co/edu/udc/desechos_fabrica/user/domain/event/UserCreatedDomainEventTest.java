@@ -2,6 +2,7 @@ package co.edu.udc.desechos_fabrica.user.domain.event;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
@@ -9,9 +10,7 @@ import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserEmail;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserFirstName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserLastName;
 import co.edu.udc.desechos_fabrica.user.domain.valueobject.UserPassword;
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import java.time.LocalDateTime;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,11 +25,12 @@ import org.junit.jupiter.api.Test;
 @DisplayName("Test de UserCreatedDomainEvent")
 class UserCreatedDomainEventTest {
 
-  // ── Arrenge Generales
+  // ── Arrange Generales
+  private static final Long ID = 1L;
   private static final String FIRST_NAME = "John";
   private static final String LAST_NAME = "Arrieta";
   private static final String EMAIL = "john.arrieta@gmail.com";
-  private static final String NIT = "123456789";
+  private static final Long ENTERPRISE_ID = 2L;
   // fromHash() acepta cualquier string no-null: evitamos el coste de BCrypt en tests
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
 
@@ -39,14 +39,15 @@ class UserCreatedDomainEventTest {
   @BeforeEach
   void setUp() {
     user =
-        new UserModel(
-            new UserFirstName(FIRST_NAME),
-            new UserLastName(LAST_NAME),
-            new UserEmail(EMAIL),
-            new EnterpriseNit(NIT),
-            UserPassword.fromHash(HASH),
-            UserRole.MEMBER,
-            UserStatus.ACTIVE);
+            new UserModel(
+                    ID,
+                    new UserFirstName(FIRST_NAME),
+                    new UserLastName(LAST_NAME),
+                    new UserEmail(EMAIL),
+                    UserPassword.fromHash(HASH),
+                    UserRole.MEMBER,
+                    UserStatus.ACTIVE,
+                    new EnterpriseId(ENTERPRISE_ID));
   }
 
   // ── eventName
@@ -80,11 +81,11 @@ class UserCreatedDomainEventTest {
     // Assert
     assertNotNull(occurredOn, "occurredOn no debe ser null");
     assertFalse(
-        occurredOn.isBefore(before),
-        "occurredOn debe ser >= al instante anterior a la construcción");
+            occurredOn.isBefore(before),
+            "occurredOn debe ser >= al instante anterior a la construcción");
     assertFalse(
-        occurredOn.isAfter(after),
-        "occurredOn debe ser <= al instante posterior a la construcción");
+            occurredOn.isAfter(after),
+            "occurredOn debe ser <= al instante posterior a la construcción");
   }
 
   // ── user()
@@ -105,22 +106,24 @@ class UserCreatedDomainEventTest {
   // ── payload()
 
   @Test
-  @DisplayName("payload() debe contener exactamente los cinco campos del usuario")
+  @DisplayName("payload() debe contener exactamente los siete campos del usuario, incluyendo IDs")
   void shouldReturnPayloadWithAllUserFields() {
     // Arrange
     final UserCreatedDomainEvent event = new UserCreatedDomainEvent(user);
 
     // Act
-    final Map<String, String> payload = event.payload();
+    final var payload = event.payload();
 
     // Assert
     assertAll(
-        "payload de UserCreatedDomainEvent",
-        () -> assertEquals(5, payload.size(), "tamaño del mapa"),
-        () -> assertEquals(FIRST_NAME, payload.get("firstName"), "firstName"),
-        () -> assertEquals(LAST_NAME, payload.get("lastName"), "lastName"),
-        () -> assertEquals(EMAIL, payload.get("email"), "email"),
-        () -> assertEquals(UserRole.MEMBER.name(), payload.get("role"), "role"),
-        () -> assertEquals(UserStatus.ACTIVE.name(), payload.get("status"), "status"));
+            "payload de UserCreatedDomainEvent",
+            () -> assertEquals(7, payload.size(), "tamaño del mapa debe ser 7"),
+            () -> assertEquals(String.valueOf(ID), payload.get("id"), "id"),
+            () -> assertEquals(FIRST_NAME, payload.get("firstName"), "firstName"),
+            () -> assertEquals(LAST_NAME, payload.get("lastName"), "lastName"),
+            () -> assertEquals(EMAIL, payload.get("email"), "email"),
+            () -> assertEquals(UserRole.MEMBER.name(), payload.get("role"), "role"),
+            () -> assertEquals(UserStatus.ACTIVE.name(), payload.get("status"), "status"),
+            () -> assertEquals(String.valueOf(ENTERPRISE_ID), payload.get("enterpriseId"), "enterpriseId"));
   }
 }

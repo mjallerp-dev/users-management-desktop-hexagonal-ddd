@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record UpdateUserCommand(
-        @NotBlank(message = "actorEmail must not be blank")
-        @Email(message = "actorEmail must be a valid email address")
-        String actorEmail,
         @NotBlank(message = "targetEmail must not be blank")
         @Email(message = "targetEmail must be a valid email address")
         String targetEmail,
@@ -25,7 +22,6 @@ public record UpdateUserCommand(
         String role,
         @NotBlank(message = "status must not be blank")
         String status,
-        @NotNull(message = "EnterpriseId must not be null")
         Long enterpriseId)
 {
 

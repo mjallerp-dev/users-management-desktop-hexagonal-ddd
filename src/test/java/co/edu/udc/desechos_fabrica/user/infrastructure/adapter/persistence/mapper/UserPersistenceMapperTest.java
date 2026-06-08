@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
 import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.enums.UserStatus;
@@ -37,10 +38,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class UserPersistenceMapperTest {
   
+  private static final Long ID = 1L;
   private static final String FIRST_NAME = "John";
   private static final String LAST_NAME = "Doe";
   private static final String EMAIL = "john@example.com";
-  private static final String NIT = "123456789";
+  private static final Long ENTERPRISE_ID  = 2L;
   private static final String HASH = "$2a$12$abcdefghijklmnopqrstuO";
   private static final String ROLE = "ADMIN";
   private static final String STATUS = "ACTIVE";
@@ -56,15 +58,16 @@ class UserPersistenceMapperTest {
   void setUp() {
     userModel =
         new UserModel(
+            ID,
             new UserFirstName(FIRST_NAME),
             new UserLastName(LAST_NAME),
             new UserEmail(EMAIL),
-            new EnterpriseNit(NIT),
             UserPassword.fromHash(HASH),
             UserRole.ADMIN,
-            UserStatus.ACTIVE);
+            UserStatus.ACTIVE,
+            new EnterpriseId(ENTERPRISE_ID));
 
-    userEntity = new UserEntity(FIRST_NAME, LAST_NAME, EMAIL, HASH, ROLE, STATUS, CREATED_AT, UPDATED_AT);
+    userEntity = new UserEntity(ID, FIRST_NAME, LAST_NAME, EMAIL, HASH, ROLE, STATUS, ENTERPRISE_ID, CREATED_AT, UPDATED_AT);
   }
 
   // ── fromModelToDto()
@@ -174,12 +177,14 @@ class UserPersistenceMapperTest {
   void shouldReturnOneModelPerRow() throws SQLException {
     // Arrange
     when(resultSet.next()).thenReturn(true, true, false);
+    when(resultSet.getLong("id")).thenReturn(ID,1L);
     when(resultSet.getString("first_name")).thenReturn(FIRST_NAME, "Jane");
     when(resultSet.getString("last_name")).thenReturn(LAST_NAME, "Doe");
     when(resultSet.getString("email")).thenReturn(EMAIL, "jane@example.com");
     when(resultSet.getString("password")).thenReturn(HASH, HASH);
     when(resultSet.getString("role")).thenReturn(ROLE, "MEMBER");
     when(resultSet.getString("status")).thenReturn(STATUS, "PENDING");
+    when(resultSet.getLong("enterprise_id")).thenReturn(ENTERPRISE_ID,2L);
     when(resultSet.getString("created_at")).thenReturn(CREATED_AT, CREATED_AT);
     when(resultSet.getString("updated_at")).thenReturn(UPDATED_AT, UPDATED_AT);
 

@@ -5,7 +5,6 @@ import co.edu.udc.desechos_fabrica.user.application.service.dto.command.DeleteUs
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.LoginCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.UpdateUserCommand;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.query.GetUserByEmailQuery;
-import co.edu.udc.desechos_fabrica.user.domain.enums.UserRole;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.CreateUserRequest;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto.LoginRequest;
@@ -30,8 +29,7 @@ public final class UserDesktopMapper {
 
   public static UpdateUserCommand toUpdateCommand(final UpdateUserRequest request) {
     return new UpdateUserCommand(
-        request.actorEmail(),
-        request.targetEmail(),
+        request.currentEmail(),
         request.newFirstName(),
         request.newLastName(),
         request.newEmail(),
@@ -41,8 +39,8 @@ public final class UserDesktopMapper {
         request.enterpriseId());
   }
 
-  public static DeleteUserCommand toDeleteCommand(final String actorEmail, final String targetEmail) {
-    return new DeleteUserCommand(actorEmail, targetEmail);
+  public static DeleteUserCommand toDeleteCommand(final String targetEmail) {
+    return new DeleteUserCommand(targetEmail);
   }
 
   public static GetUserByEmailQuery toGetByEmailQuery(final String email) {
