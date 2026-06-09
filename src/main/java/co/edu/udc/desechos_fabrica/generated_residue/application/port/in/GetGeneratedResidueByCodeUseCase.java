@@ -3,6 +3,6 @@ package co.edu.udc.desechos_fabrica.generated_residue.application.port.in;
 import co.edu.udc.desechos_fabrica.generated_residue.domain.model.GeneratedResidueModel;
 import java.util.Optional;
 
-public interface GetGeneratedResidueByIdUseCase {
-    Optional<GeneratedResidueModel> execute(Long id);
+public interface GetGeneratedResidueByCodeUseCase {
+    Optional<GeneratedResidueModel> execute(String code);
 }
