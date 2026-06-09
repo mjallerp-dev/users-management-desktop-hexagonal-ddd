@@ -18,7 +18,7 @@ public class LocationPersistenceMapper {
 
      public LocationPersistenceDto fromModelToDto(final LocationModel location) {
          return new LocationPersistenceDto(
-            location.getId() != null ? location.getId().value() : null,
+            location.getId() != null ? location.getId() : null,
             location.getName().value(),
             location.getAddress().value(),
             location.getEnterpriseId().value(),
@@ -51,10 +51,10 @@ public class LocationPersistenceMapper {
 
     public LocationModel fromEntityToModel(final LocationEntity entity) {
         return new LocationModel(
-                entity.id() != null ? new LocationId(entity.id()) : null,
+                entity.id() != null ? new LocationId(entity.id()).value() : null,
                 new LocationName(entity.name()),
                 new LocationAddress(entity.address()),
-                new EnterpriseId(entity.enterpriseId()),
+                entity.enterpriseId() != null ? new EnterpriseId(entity.enterpriseId()) : null,
                 new LocationCountry(entity.country()),
                 new LocationState(entity.state()),
                 new LocationCity(entity.city()),

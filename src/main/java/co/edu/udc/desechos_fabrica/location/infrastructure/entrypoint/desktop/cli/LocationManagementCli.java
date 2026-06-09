@@ -29,6 +29,7 @@ public class LocationManagementCli {
     public void start(){
         console.println(BANNER);
         final LocationResponsePrinter printer = new LocationResponsePrinter(console);
+        runLoop(buildHandlers(printer));
     }
 
     private void runLoop(final Map<LocationMenuOption, OperationHandler> handlers) {

@@ -56,7 +56,7 @@ public final class LocationDesktopMapper {
 
     public static LocationResponse toResponse(final LocationModel Location) {
         return new LocationResponse(
-                Location.getId().value(),
+                Location.getId(),
                 Location.getName().value(),
                 Location.getAddress().value(),
                 Location.getEnterpriseId().value(),

@@ -25,6 +25,8 @@ public final class LocationRepositoryPostgresSQL
         GetLocationByIdPort,
         GetAllLocationsPort {
 
+    private static final String COLUMNS = "id, name, address, enterprise_id, country, state, city, latitude, longitude, status, created_at, updated_at";
+
     private static final String SQL_INSERT =
             "INSERT INTO location(name, address, enterprise_id, country, state, city, latitude, longitude, status, created_at, updated_at) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
@@ -34,18 +36,18 @@ public final class LocationRepositoryPostgresSQL
                     + "WHERE id = ?";
 
     private static final String SQL_SELECT_BY_ID =
-            "SELECT id, name, address, enterprise_id, country, state, city, latitude, longitude, status, created_at, updated_at "
-                    + "FROM location "
-                    + "WHERE id = ? LIMIT 1";
+            "SELECT " + COLUMNS + " FROM location WHERE id = ? LIMIT 1";
 
     private static final String SQL_SELECT_ALL =
-            "SELECT * FROM location";
+            "SELECT " + COLUMNS + " FROM location";
+    
+    private final Connection connection;
 
     @Override
     public LocationModel save(final LocationModel location) {
         final LocationPersistenceDto dto = LocationPersistenceMapper.fromModelToDto(location);
         final Long generatedId = executeSave(dto);
-        return findByIdOrFail(new LocationId(generatedId));
+        return location.withId(generatedId);
     }
 
     @Override
@@ -55,8 +57,6 @@ public final class LocationRepositoryPostgresSQL
         executeUpdate(id.value(), dto);
         return findByIdOrFail(id);
     }
-
-    private final Connection connection;
 
     private Long executeSave(final LocationPersistenceDto dto) {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_INSERT, Statement.RETURN_GENERATED_KEYS)) {
@@ -70,19 +70,20 @@ public final class LocationRepositoryPostgresSQL
             statement.setDouble(8, dto.longitude());
             statement.setString(9, dto.status());
             statement.executeUpdate();
+
             try (final ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     return generatedKeys.getLong(1);
                 }
-                throw new SQLException("No se pudo obtener el ID generado para la localización.");
+                throw new SQLException("Could not retrieve generated ID for location.");
             }
         } catch (final SQLException exception) {
-            throw PersistenceException.becauseSaveFailed(String.valueOf(dto.id()), exception);
+            throw PersistenceException.becauseSaveFailed(dto.name(), exception);
         }
     }
 
-    private void executeUpdate( final Long id, final LocationPersistenceDto dto) {
-        try (final PreparedStatement statement = connection.prepareStatement((SQL_UPDATE))) {
+    private void executeUpdate(final Long id, final LocationPersistenceDto dto) {
+        try (final PreparedStatement statement = connection.prepareStatement(SQL_UPDATE)) {
             statement.setString(1, dto.name());
             statement.setString(2, dto.address());
             statement.setString(3, dto.country());
@@ -94,14 +95,14 @@ public final class LocationRepositoryPostgresSQL
             statement.setLong(9, id);
             statement.executeUpdate();
         } catch (final SQLException exception) {
-            throw PersistenceException.becauseUpdateFailed(String.valueOf(dto.id()), exception);
+            throw PersistenceException.becauseUpdateFailed(String.valueOf(id), exception);
         }
     }
 
     @Override
-    public Optional<LocationModel> getById(final Long id) {
+    public Optional<LocationModel> getById(final LocationId id) {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BY_ID)) {
-            statement.setLong(1, id);
+            statement.setLong(1, id.value());
             try (final var resultSet = statement.executeQuery()) {
                 if (!resultSet.next()) {
                     return Optional.empty();
@@ -109,14 +110,14 @@ public final class LocationRepositoryPostgresSQL
                 return Optional.of(LocationPersistenceMapper.fromResultSetToModel(resultSet));
             }
         } catch (final SQLException exception) {
-            throw PersistenceException.becauseFindByIdFailed(String.valueOf(id),exception);
+            throw PersistenceException.becauseFindByIdFailed(String.valueOf(id.value()), exception);
         }
     }
 
     @Override
     public List<LocationModel> getAll() {
         try (final PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL);
-            final ResultSet resultSet = statement.executeQuery()) {
+             final ResultSet resultSet = statement.executeQuery()) {
             return LocationPersistenceMapper.fromResultSetToModelList(resultSet);
         } catch (final SQLException exception) {
             throw PersistenceException.becauseFindAllFailed(exception);
@@ -124,7 +125,7 @@ public final class LocationRepositoryPostgresSQL
     }
 
     private LocationModel findByIdOrFail(final LocationId id){
-        return getById(id.value())
+        return getById(id)
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
 
