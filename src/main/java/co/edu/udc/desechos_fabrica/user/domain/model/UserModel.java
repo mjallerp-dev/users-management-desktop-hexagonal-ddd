@@ -76,7 +76,6 @@ public class UserModel {
 
     if (enterpriseIsChanging) {
       if (newEnterpriseId != null) {
-        finalStatus = UserStatus.PENDING;
         finalRole = UserRole.ENTERPRISE_ADMIN;
       } else {
         finalRole = UserRole.MEMBER;

@@ -41,7 +41,7 @@ public final class UpdateLocationService implements UpdateLocationUseCase {
     }
 
     public LocationModel findExistingLocationOrFail(final LocationId id) {
-        return getLocationByIdPort.getById(id.value())
+        return getLocationByIdPort.getById(id)
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
 }

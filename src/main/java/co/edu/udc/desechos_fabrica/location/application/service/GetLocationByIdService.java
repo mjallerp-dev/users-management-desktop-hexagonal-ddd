@@ -24,7 +24,7 @@ public class GetLocationByIdService implements GetLocationByIdUseCase {
         validateQuery(query);
 
         final LocationId id = LocationApplicationMapper.fromGetLocationByIdQueryToLocationId(query);
-        return getLocationByIdPort.getById(id.value())
+        return getLocationByIdPort.getById(id)
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
 

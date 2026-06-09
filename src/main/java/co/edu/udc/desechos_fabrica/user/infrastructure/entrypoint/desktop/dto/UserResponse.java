@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.dto;
 
 public record UserResponse(
+    Long id,
     String firstName,
     String lastName,
     String email,

@@ -2,7 +2,7 @@ package co.edu.udc.desechos_fabrica.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import co.edu.udc.desechos_fabrica.user.infrastructure.config.ValidatorProvider;
+import co.edu.udc.desechos_fabrica.config.ValidatorProvider;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.NotNull;

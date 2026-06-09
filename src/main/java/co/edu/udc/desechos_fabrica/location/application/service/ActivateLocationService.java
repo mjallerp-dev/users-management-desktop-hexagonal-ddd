@@ -30,7 +30,7 @@ public class ActivateLocationService implements ActivateLocationUseCase {
         final LocationModel existingLocation = findExistingLocationOrFail(locationId);
 
         final LocationModel locationToActivate = LocationApplicationMapper.fromActivateCommandToModel(existingLocation);
-        return updateLocationPort.update(locationId,locationToActivate);
+        return updateLocationPort.update(locationId, locationToActivate);
     }
 
     private void validateCommand(final ActivateLocationCommand command){
@@ -41,7 +41,7 @@ public class ActivateLocationService implements ActivateLocationUseCase {
     }
 
     private LocationModel findExistingLocationOrFail(final LocationId id) {
-        return getLocationByIdPort.getById(id.value())
+        return getLocationByIdPort.getById(id)
                 .orElseThrow(() -> LocationNotFoundException.becauseIdWasNotFound(id.value()));
     }
 }
