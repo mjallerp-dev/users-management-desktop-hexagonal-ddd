@@ -34,11 +34,12 @@ public class GeneratedResidueModel {
     }
 
     public static GeneratedResidueModel create(
+            final Long id,
             final GeneratedResidueCode code,
             final ResidueId residueId,
             final EnterpriseId enterpriseId,
             final GeneratedQuantity quantity) {
-        return new GeneratedResidueModel(null, code, residueId, enterpriseId, quantity);
+        return new GeneratedResidueModel(id, code, residueId, enterpriseId, quantity);
     }
 
     public GeneratedResidueModel updateWith(
