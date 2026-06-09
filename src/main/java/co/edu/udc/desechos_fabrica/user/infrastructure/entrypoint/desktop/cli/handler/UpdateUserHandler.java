@@ -36,6 +36,7 @@ public final class UpdateUserHandler implements OperationHandler {
       final String newFirstName = console.readRequired              ("New first name                                 : ");
       final String newLastName = console.readRequired               ("New last name                                  : ");
       final String newEmail = console.readOptional                  ("New email (leave blank to keep current)        : ");
+
       final String newPassword = console.readOptional               ("New password (leave blank to keep current)     : ");
       final Long newEnterpriseId = console.readLong                 ("New enterprise ID (leave blank to keep current): ");
       

@@ -17,9 +17,7 @@ public enum UserMenuOption implements MenuOption {
   CREATE_USER(3, "Create user"),
   UPDATE_USER(4, "Update user"),
   DELETE_USER(5, "Delete user"),
-  LOGIN(6, "Login"),
-  LOGOUT(7, "Logout"),
-  EXIT(0, "Exit");
+  BACK(0, "Back to Main Menu");
 
   private final int number;
   private final String description;
@@ -33,14 +31,13 @@ public enum UserMenuOption implements MenuOption {
     return Optional.empty();
   }
 
+  @Override
   public boolean isVisible() {
     boolean loggedIn = SessionManager.isLoggedIn();
 
     return switch (this) {
-      case LOGIN -> !loggedIn;
-      case LOGOUT, LIST_USERS, FIND_USER, UPDATE_USER, DELETE_USER -> loggedIn;
+      case LIST_USERS, FIND_USER, UPDATE_USER, DELETE_USER, BACK -> loggedIn;
       case CREATE_USER -> loggedIn && "ADMIN".equals(SessionManager.getCurrentUser().map(UserResponse::role).orElse(""));
-      case EXIT -> true;
     };
   }
 }

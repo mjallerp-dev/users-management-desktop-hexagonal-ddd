@@ -41,6 +41,7 @@ public class UserApplicationMapper {
       final UserRole newRole = UserRole.fromString(command.role());
       final UserStatus newStatus = UserStatus.fromString(command.status());
       final EnterpriseId newEnterpriseId = resolveEnterpriseId(command.enterpriseId(), currentUser.getEnterpriseId());
+
     return currentUser.updateWith(
         newFirstName, newLastName, newEmail, newPassword, newRole, newStatus, newEnterpriseId
     );
@@ -88,7 +89,7 @@ public class UserApplicationMapper {
       if (Objects.isNull(newEmail) || newEmail.isBlank()) {
           return currentEmail;
       }
-      return UserEmail.fromPlainText(newEmail);
+      return new UserEmail(newEmail);
   }
 
     private EnterpriseId resolveEnterpriseId(final Long newEnterpriseId, final EnterpriseId currentEnterpriseId) {

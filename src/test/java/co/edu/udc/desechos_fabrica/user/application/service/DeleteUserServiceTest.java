@@ -70,7 +70,7 @@ class DeleteUserServiceTest {
 
     UserResponse fakeSessionUser =
             new UserResponse(
-                    "John", "Arrieta", validEmail, "ADMIN", "ACTIVE", 1L
+                    1L, "John", "Arrieta", validEmail, "ADMIN", "ACTIVE", 1L
             );
 
     when(getUserByEmailPort.getByEmail(any(UserEmail.class))).thenReturn(Optional.of(existing));
@@ -95,7 +95,7 @@ class DeleteUserServiceTest {
     String targetEmail = "notfound@example.com";
     DeleteUserCommand command = new DeleteUserCommand(targetEmail);
 
-    UserResponse fakeSessionUser = new UserResponse("John", "Arrieta", "admin@empresa.com", "ADMIN", "ACTIVE", 1L);
+    UserResponse fakeSessionUser = new UserResponse(1L,"John", "Arrieta", "admin@empresa.com", "ADMIN", "ACTIVE", 1L);
 
     when(getUserByEmailPort.getByEmail(new UserEmail(targetEmail))).thenReturn(Optional.empty());
 

@@ -40,14 +40,14 @@ public final class UpdateUserService implements UpdateUserUseCase {
     final UserModel targetUser = findExistingUserOrFail(new UserEmail(command.targetEmail()));
 
     final UserRole newRoleFromCommand = UserRole.fromString(command.role());
-    userRoleManager.checkUpdatePermissions(actor, targetUser, newRoleFromCommand);;
-
-    final UserEmail newEmail = new UserEmail(command.newEmail());
-    if (!newEmail.equals(targetUser.getEmail())) {
-      ensureEmailIsNotTakenByAnotherUser(newEmail);
-    }
+    userRoleManager.checkUpdatePermissions(actor, targetUser, newRoleFromCommand);
 
     final UserModel userToUpdate = UserApplicationMapper.fromUpdateCommandToModel(command, targetUser);
+
+    if (!userToUpdate.getEmail().equals(targetUser.getEmail())) {
+      ensureEmailIsNotTakenByAnotherUser(userToUpdate.getEmail());
+    }
+
     final UserModel updatedUser = updateUserPort.update(targetUser.getEmail(), userToUpdate);
     
     emailNotificationService.notifyUserUpdated(updatedUser);

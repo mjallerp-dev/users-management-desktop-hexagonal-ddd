@@ -1,5 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli;
 
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.LocationManagementCli;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.CreateUserHandler;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.DeleteUserHandler;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.handler.FindUserByEmailHandler;
@@ -21,11 +22,11 @@ public final class UserManagementCli {
 
   private static final String BANNER =
       """
-      ===========================================
-        EcoResidues - Residue Management System
-      ===========================================""";
+      ==========================================
+            EcoResidues - Users Management
+      ==========================================""";
 
-  private static final String MENU_BORDER = "  ===========================================";
+  private static final String MENU_BORDER = "  ==========================================";
 
   private final UserController userController;
   private final ConsoleIO console;
@@ -45,7 +46,7 @@ public final class UserManagementCli {
 
       if (option.isEmpty()) {
         console.println("  Invalid option. Please try again.");
-      } else if (option.get() == UserMenuOption.EXIT) {
+      } else if (option.get() == UserMenuOption.BACK) {
         console.println("\n  Goodbye!\n");
         running = false;
       } else {
@@ -74,7 +75,7 @@ public final class UserManagementCli {
         UserMenuOption.CREATE_USER, new CreateUserHandler(userController, console, printer),
         UserMenuOption.UPDATE_USER, new UpdateUserHandler(userController, console, printer),
         UserMenuOption.DELETE_USER, new DeleteUserHandler(userController, console),
-        UserMenuOption.LOGIN,       new LoginHandler(userController, console, printer));
+        UserMenuOption.BACK,       new LoginHandler(userController, console, printer));
   }
 
   private void printMenu() {

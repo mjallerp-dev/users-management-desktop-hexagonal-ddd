@@ -1,13 +1,10 @@
 package co.edu.udc.desechos_fabrica.location.application.service;
 
 import co.edu.udc.desechos_fabrica.location.application.port.in.CreateLocationUseCase;
-import co.edu.udc.desechos_fabrica.location.application.port.out.GetLocationByIdPort;
 import co.edu.udc.desechos_fabrica.location.application.port.out.SaveLocationPort;
 import co.edu.udc.desechos_fabrica.location.application.service.dto.command.CreateLocationCommand;
 import co.edu.udc.desechos_fabrica.location.application.service.mapper.LocationApplicationMapper;
-import co.edu.udc.desechos_fabrica.location.domain.exception.LocationAlreadyExistsException;
 import co.edu.udc.desechos_fabrica.location.domain.model.LocationModel;
-import co.edu.udc.desechos_fabrica.location.domain.valueobject.LocationId;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -27,8 +24,6 @@ public class CreateLocationService implements CreateLocationUseCase {
     public LocationModel execute(final CreateLocationCommand command) {
         validateCommand(command);
 
-        final LocationId id = new LocationId(null);
-
         final LocationModel LocationToSave = LocationApplicationMapper.fromCreateCommandToModel(command);
         return saveLocationPort.save(LocationToSave);}
 
@@ -38,5 +33,4 @@ public class CreateLocationService implements CreateLocationUseCase {
             throw new ConstraintViolationException(violations);
         }
     }
-
 }

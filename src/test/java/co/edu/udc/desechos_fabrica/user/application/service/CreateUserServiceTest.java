@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseId;
-import co.edu.udc.desechos_fabrica.enterprise.domain.valueobject.EnterpriseNit;
 import co.edu.udc.desechos_fabrica.user.application.port.out.GetUserByEmailPort;
 import co.edu.udc.desechos_fabrica.user.application.port.out.SaveUserPort;
 import co.edu.udc.desechos_fabrica.user.application.service.dto.command.CreateUserCommand;

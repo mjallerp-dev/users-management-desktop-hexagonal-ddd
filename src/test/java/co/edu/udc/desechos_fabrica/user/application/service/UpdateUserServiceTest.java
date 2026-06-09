@@ -43,7 +43,6 @@ class UpdateUserServiceTest {
   private UpdateUserService service;
 
   private UserModel existingUser;
-  private UserModel actorUser;
 
   @BeforeEach
   void setUp() {
@@ -60,16 +59,6 @@ class UpdateUserServiceTest {
             UserRole.MEMBER,
             UserStatus.ACTIVE,
             new EnterpriseId(1L));
-
-    actorUser = new UserModel(
-            2L,
-            new UserFirstName("Admin"),
-            new UserLastName("User"),
-            new UserEmail("admin@ecoresiduos.com"),
-            UserPassword.createDummy(),
-            UserRole.ADMIN,
-            UserStatus.ACTIVE,
-            new EnterpriseId(999L));
   }
 
   @AfterEach
@@ -78,7 +67,7 @@ class UpdateUserServiceTest {
   }
 
   private void mockSession(String email, String role) {
-    SessionManager.login(new UserResponse("SessionFirst", "SessionLast", email, role, "ACTIVE", 999L));
+    SessionManager.login(new UserResponse(1L, "SessionFirst", "SessionLast", email, role, "ACTIVE", 999L));
   }
 
   @Test
