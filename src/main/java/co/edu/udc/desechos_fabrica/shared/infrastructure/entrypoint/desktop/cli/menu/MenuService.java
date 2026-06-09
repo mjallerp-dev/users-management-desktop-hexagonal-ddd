@@ -12,15 +12,8 @@ public class MenuService {
     public List<MenuOption> getOptionsForRole(UserRole userRole) {
         List<MenuOption> options = new ArrayList<>();
 
-        options.add(UserMenuOption.LOGIN);
-        options.add(UserMenuOption.EXIT);
-
         if (userRole == null) {
             options.add(UserMenuOption.CREATE_USER);
-            options.add(UserMenuOption.LOGIN);
-            options.add(UserMenuOption.EXIT);
-        } else {
-            options.add(UserMenuOption.LOGOUT);
         }
         if (userRole == UserRole.ADMIN || userRole == UserRole.REVIEWER) {
             options.addAll(List.of(
