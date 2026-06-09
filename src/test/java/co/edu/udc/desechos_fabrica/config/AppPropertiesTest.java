@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.user.infrastructure.config;
+package co.edu.udc.desechos_fabrica.config;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import co.edu.udc.desechos_fabrica.user.infrastructure.config.AppProperties;
-import co.edu.udc.desechos_fabrica.user.infrastructure.config.ConfigurationException;
+import co.edu.udc.desechos_fabrica.config.AppProperties;
+import co.edu.udc.desechos_fabrica.config.ConfigurationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

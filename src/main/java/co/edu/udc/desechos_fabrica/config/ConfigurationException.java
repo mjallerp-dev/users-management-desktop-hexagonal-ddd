@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.user.infrastructure.config;
+package co.edu.udc.desechos_fabrica.config;
 
 public final class ConfigurationException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.user.infrastructure.config;
+package co.edu.udc.desechos_fabrica.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ public final class AppProperties {
 
   // Package-private — test entry point: inject null to simulate file-not-found,
   // a failing stream to simulate IOException, or a valid stream for the happy path.
-  AppProperties(final InputStream stream) {
+  public AppProperties(final InputStream stream) {
     this.properties = doLoad(stream);
   }
 

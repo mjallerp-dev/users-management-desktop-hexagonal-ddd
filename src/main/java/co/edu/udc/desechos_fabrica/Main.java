@@ -1,6 +1,8 @@
 package co.edu.udc.desechos_fabrica;
 
-import co.edu.udc.desechos_fabrica.user.infrastructure.config.DependencyContainer;
+import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.cli.LocationManagementCli;
+import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.ManagementCli;
+import co.edu.udc.desechos_fabrica.config.DependencyContainer;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.cli.UserManagementCli;
 import co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli.io.ConsoleIO;
 import java.util.Scanner;
@@ -15,7 +17,13 @@ public final class Main {
     log.info("Starting Users Management System...");
     final DependencyContainer container = new DependencyContainer();
     try (final Scanner scanner = new Scanner(System.in)) {
-      new UserManagementCli(container.userController(), new ConsoleIO(scanner, System.out)).start();
+      final ConsoleIO io = new ConsoleIO(scanner, System.out);
+
+      final UserManagementCli userCli = new UserManagementCli(container.userController(), io);
+      final LocationManagementCli locationCli = new LocationManagementCli(container.locationController(), io);
+
+      final ManagementCli mainApp = new ManagementCli(container.userController(), userCli, locationCli, io);
+      mainApp.start();
     }
   }
 }

@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.user.infrastructure.config;
+package co.edu.udc.desechos_fabrica.config;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -7,7 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 
 import co.edu.udc.desechos_fabrica.user.infrastructure.adapter.persistence.exception.PersistenceException;
-import co.edu.udc.desechos_fabrica.user.infrastructure.config.DependencyContainer;
+import co.edu.udc.desechos_fabrica.config.DependencyContainer;
 import co.edu.udc.desechos_fabrica.user.infrastructure.entrypoint.desktop.controller.UserController;
 import java.sql.Connection;
 import java.sql.DriverManager;
