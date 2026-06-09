@@ -19,7 +19,7 @@ public class LocationUpdatedDomainEvent extends DomainEvent {
     @Override
     public Map<String, Object> payload() {
         return java.util.Map.of(
-                "locationId", location.getId().value(),
+                "locationId", location.getId(),
                 "name", location.getName().value(),
                 "enterpriseId", location.getEnterpriseId().value(),
                 "city", location.getCity().value(),

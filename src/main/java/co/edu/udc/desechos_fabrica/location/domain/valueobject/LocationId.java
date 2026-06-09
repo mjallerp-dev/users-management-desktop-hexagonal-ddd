@@ -1,6 +1,5 @@
 package co.edu.udc.desechos_fabrica.location.domain.valueobject;
 
-import java.util.Objects;
 import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationIdException;
 
 
