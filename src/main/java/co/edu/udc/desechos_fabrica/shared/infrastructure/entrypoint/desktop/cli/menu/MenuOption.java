@@ -3,4 +3,8 @@ package co.edu.udc.desechos_fabrica.shared.infrastructure.entrypoint.desktop.cli
 public interface MenuOption {
     int getNumber();
     String getDescription();
+
+    default boolean isVisible(){
+        return true;
+    }
 }
