@@ -16,6 +16,7 @@ public class LocationResponsePrinter {
 
     public void print(final LocationResponse response) {
         console.println(SEPARATOR);
+        console.printf(ROW_FORMAT, "Location ID", response.id());
         console.printf(ROW_FORMAT, "Location Name", response.name());
         console.printf(ROW_FORMAT, "Address", response.address());
         console.printf(ROW_FORMAT, "EnterpriseId", response.enterpriseId());
