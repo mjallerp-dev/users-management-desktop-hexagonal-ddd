@@ -75,9 +75,11 @@ public class UserModel {
     boolean enterpriseIsChanging = !Objects.equals(this.enterpriseId, newEnterpriseId);
 
     if (enterpriseIsChanging) {
-      if (newEnterpriseId != null) {
+      if (newEnterpriseId != null && newRole == UserRole.MEMBER) {
         finalRole = UserRole.ENTERPRISE_ADMIN;
-      } else {
+        finalStatus = UserStatus.PENDING;
+      }
+      if (newEnterpriseId == null && newRole == UserRole.ENTERPRISE_ADMIN){
         finalRole = UserRole.MEMBER;
       }
     }

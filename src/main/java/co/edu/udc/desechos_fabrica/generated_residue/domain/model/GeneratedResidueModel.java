@@ -16,40 +16,34 @@ public class GeneratedResidueModel {
     Long id;
     GeneratedResidueCode code;
     ResidueId residueId;
-    GeneratedQuantity quantity;
     EnterpriseId enterpriseId;
+    GeneratedQuantity quantity;
 
     public GeneratedResidueModel(
             final Long id,
             final GeneratedResidueCode code,
             final ResidueId residueId,
-            final GeneratedQuantity quantity,
-            final EnterpriseId enterpriseId) {
+            final EnterpriseId enterpriseId,
+            final GeneratedQuantity quantity) {
 
         this.id = id;
         this.code = Objects.requireNonNull(code, "Generated residue business code must not be null");
         this.residueId = Objects.requireNonNull(residueId, "Residue catalog reference (id) must not be null");
-        this.quantity = Objects.requireNonNull(quantity, "Generated quantity must not be null");
         this.enterpriseId = Objects.requireNonNull(enterpriseId, "Enterprise reference (id) must not be null");
+        this.quantity = Objects.requireNonNull(quantity, "Generated quantity must not be null");
     }
 
     public static GeneratedResidueModel create(
             final GeneratedResidueCode code,
             final ResidueId residueId,
-            final GeneratedQuantity quantity,
-            final EnterpriseId enterpriseId) {
-        return new GeneratedResidueModel(null, code, residueId, quantity, enterpriseId);
+            final EnterpriseId enterpriseId,
+            final GeneratedQuantity quantity) {
+        return new GeneratedResidueModel(null, code, residueId, enterpriseId, quantity);
     }
 
     public GeneratedResidueModel updateWith(
             final GeneratedResidueCode code,
             final GeneratedQuantity quantity) {
-        return new GeneratedResidueModel(
-                this.id,
-                code,
-                this.residueId,
-                quantity,
-                this.enterpriseId
-        );
+        return new GeneratedResidueModel(this.id, code, this.residueId, this.enterpriseId, quantity);
     }
 }

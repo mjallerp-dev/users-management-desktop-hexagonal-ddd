@@ -25,8 +25,8 @@ public class ResidueModel {
     public ResidueModel(
             final ResidueId id,
             final ResidueName name,
-            final MaxTransportTime maxTransportTime,
             final MaxTransportQuantity maxTransportQuantity,
+            final MaxTransportTime maxTransportTime,
             final ResidueType residueType,
             final MeasurementUnit measurementUnit,
             final List<ChemicalComponent> chemicalComponents) {
@@ -49,21 +49,21 @@ public class ResidueModel {
             final ResidueType residueType,
             final MeasurementUnit measurementUnit,
             final List<ChemicalComponent> chemicalComponents) {
-        return new ResidueModel(null, name, maxTransportTime, maxTransportQuantity, residueType, measurementUnit, chemicalComponents);
+        return new ResidueModel(null, name, maxTransportQuantity, maxTransportTime, residueType, measurementUnit, chemicalComponents);
     }
 
     public ResidueModel updateWith(
             final ResidueName name,
-            final MaxTransportTime maxTransportTime,
             final MaxTransportQuantity maxTransportQuantity,
+            final MaxTransportTime maxTransportTime,
             final ResidueType residueType,
             final MeasurementUnit measurementUnit,
             final List<ChemicalComponent> chemicalComponents) {
         return new ResidueModel(
                 this.id,
                 name,
-                maxTransportTime,
                 maxTransportQuantity,
+                maxTransportTime,
                 residueType,
                 measurementUnit,
                 chemicalComponents
