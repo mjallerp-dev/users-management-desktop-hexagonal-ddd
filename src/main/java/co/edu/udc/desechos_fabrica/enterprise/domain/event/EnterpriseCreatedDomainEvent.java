@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.enterprise.domain.event;
 
-import co.edu.udc.desechos_fabrica.shared.domain.DomainEvent;
+import co.edu.udc.desechos_fabrica.shared.domain.event.DomainEvent;
 import co.edu.udc.desechos_fabrica.enterprise.domain.model.EnterpriseModel;
 
 import java.util.Map;

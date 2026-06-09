@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.shared.domain;
+package co.edu.udc.desechos_fabrica.shared.domain.exception;
 
 public abstract class DomainException extends RuntimeException {
 

@@ -1,7 +1,7 @@
 package co.edu.udc.desechos_fabrica.location.domain.event;
 
 import co.edu.udc.desechos_fabrica.location.domain.model.LocationModel;
-import co.edu.udc.desechos_fabrica.shared.domain.DomainEvent;
+import co.edu.udc.desechos_fabrica.shared.domain.event.DomainEvent;
 
 import java.util.Map;
 

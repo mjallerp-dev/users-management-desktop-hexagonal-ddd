@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.domain.event;
 
-import co.edu.udc.desechos_fabrica.shared.domain.DomainEvent;
+import co.edu.udc.desechos_fabrica.shared.domain.event.DomainEvent;
 import co.edu.udc.desechos_fabrica.user.domain.model.UserModel;
 
 import java.util.HashMap;

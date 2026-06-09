@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.residue.domain.exception;
 
-import co.edu.udc.desechos_fabrica.shared.domain.DomainException;
+import co.edu.udc.desechos_fabrica.shared.domain.exception.DomainException;
 
 public class InvalidResidueNameException extends DomainException {
 

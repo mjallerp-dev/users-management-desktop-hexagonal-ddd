@@ -1,6 +1,6 @@
 package co.edu.udc.desechos_fabrica.user.domain.exception;
 
-import co.edu.udc.desechos_fabrica.shared.domain.DomainException;
+import co.edu.udc.desechos_fabrica.shared.domain.exception.DomainException;
 
 public final class InvalidUserNameException extends DomainException {
 

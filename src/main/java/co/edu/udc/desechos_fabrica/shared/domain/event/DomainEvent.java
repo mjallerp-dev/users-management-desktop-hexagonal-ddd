@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.shared.domain;
+package co.edu.udc.desechos_fabrica.shared.domain.event;
 
 import java.time.LocalDateTime;
 import java.util.Map;
