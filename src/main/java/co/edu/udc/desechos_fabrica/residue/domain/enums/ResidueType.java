@@ -25,6 +25,6 @@ public enum ResidueType {
         return Arrays.stream(values())
                 .filter(type -> type.id == id)
                 .findFirst()
-                .orElseThrow(() -> InvalidResidueTypeException.becauseIdDoesNotExist(id));
+                .orElseThrow(InvalidResidueTypeException::becauseValueIsNull);
     }
 }

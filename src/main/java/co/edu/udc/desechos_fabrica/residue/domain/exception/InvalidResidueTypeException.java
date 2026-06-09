@@ -4,13 +4,13 @@ import co.edu.udc.desechos_fabrica.shared.domain.exception.DomainException;
 
 public class InvalidResidueTypeException extends DomainException {
 
-    private static final String MESSAGE_INVALID_ID = "The residue type ID '%d' is invalid or does not exist.";
+    private static final String MESSAGE_NULL = "The residue type ID must not be null.";
 
     private InvalidResidueTypeException(final String message) {
         super(message);
     }
 
-    public static InvalidResidueTypeException becauseIdDoesNotExist(final int id) {
-        return new InvalidResidueTypeException(String.format(MESSAGE_INVALID_ID, id));
+    public static InvalidResidueTypeException becauseValueIsNull() {
+        return new InvalidResidueTypeException(MESSAGE_NULL);
     }
 }

@@ -1,6 +1,5 @@
 package co.edu.udc.desechos_fabrica.residue.domain.valueobject;
 
-import co.edu.udc.desechos_fabrica.location.domain.exception.InvalidLocationNameException;
 import co.edu.udc.desechos_fabrica.residue.domain.exception.InvalidResidueNameException;
 
 import java.util.Objects;
