@@ -66,8 +66,4 @@ public class LocationModel {
     public LocationModel deactivate() {
         return new LocationModel(id, name, address, enterpriseId, country, state, city, coordinate, LocationStatus.INACTIVE);
     }
-
-    public String fe() {
-        return null;
-    }
 }

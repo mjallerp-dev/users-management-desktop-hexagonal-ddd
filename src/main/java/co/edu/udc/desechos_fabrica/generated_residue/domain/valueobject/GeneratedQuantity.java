@@ -1,6 +1,7 @@
 package co.edu.udc.desechos_fabrica.generated_residue.domain.valueobject;
 
 import co.edu.udc.desechos_fabrica.generated_residue.domain.exception.InvalidGeneratedQuantityException;
+import co.edu.udc.desechos_fabrica.shared.domain.enums.MeasurementUnit;
 
 public record GeneratedQuantity(Double value, MeasurementUnit unit) {
 
@@ -18,6 +19,6 @@ public record GeneratedQuantity(Double value, MeasurementUnit unit) {
 
     @Override
     public String toString() {
-        return value + " " + unit.name();
+        return value + " " + unit.getSymbol();
     }
 }
