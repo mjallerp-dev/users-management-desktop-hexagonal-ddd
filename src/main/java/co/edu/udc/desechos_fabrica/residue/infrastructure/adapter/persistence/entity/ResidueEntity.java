@@ -3,11 +3,13 @@ package co.edu.udc.desechos_fabrica.residue.infrastructure.adapter.persistence.e
 import co.edu.udc.desechos_fabrica.residue.domain.enums.ResidueType;
 import co.edu.udc.desechos_fabrica.shared.domain.enums.MeasurementUnit;
 
-public class ResidueEntity {
-    private Long id;
-    private String name;
-    private Integer maxTransportTime;
-    private Double maxTransportQuantity;
-    private ResidueType residueType;
-    private MeasurementUnit measurementUnit;
+public record ResidueEntity(
+        Long id,
+        String name,
+        Integer maxTransportTime,
+        Double maxTransportQuantity,
+        ResidueType residueType,
+        MeasurementUnit measurementUnit
+) {
+
 }
