@@ -43,7 +43,7 @@ public class ResiduePersistenceMapper {
                 new MaxTransportTime(resultSet.getInt("max_transport_time")),
                 ResidueType.valueOf(resultSet.getString("residue_type")),
                 MeasurementUnit.valueOf(resultSet.getString("measurement_unit")),
-                Collections.emptyList() // Nota: Aquí deberías cargar los componentes si haces un JOIN
+                Collections.emptyList()
         );
     }
 
