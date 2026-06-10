@@ -3,7 +3,7 @@ package co.edu.udc.desechos_fabrica.residue.application.service;
 import co.edu.udc.desechos_fabrica.residue.application.port.in.RegisterResidueUseCase;
 import co.edu.udc.desechos_fabrica.residue.application.port.out.SaveResiduePort;
 import co.edu.udc.desechos_fabrica.residue.application.service.dto.command.RegisterResidueCommand;
-import co.edu.udc.desechos_fabrica.residue.application.service.dto.mapper.ResidueApplicationMapper;
+import co.edu.udc.desechos_fabrica.residue.application.service.mapper.ResidueApplicationMapper;
 import co.edu.udc.desechos_fabrica.residue.domain.model.ResidueModel;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

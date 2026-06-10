@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.residue.application.service.dto.mapper;
+package co.edu.udc.desechos_fabrica.residue.application.service.mapper;
 
 import co.edu.udc.desechos_fabrica.residue.application.service.dto.command.RegisterResidueCommand;
 import co.edu.udc.desechos_fabrica.residue.application.service.dto.command.UpdateResidueCommand;

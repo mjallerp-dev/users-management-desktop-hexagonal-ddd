@@ -4,7 +4,7 @@ import co.edu.udc.desechos_fabrica.residue.application.port.in.UpdateResidueUseC
 import co.edu.udc.desechos_fabrica.residue.application.port.out.FindResidueByIdPort;
 import co.edu.udc.desechos_fabrica.residue.application.port.out.SaveResiduePort;
 import co.edu.udc.desechos_fabrica.residue.application.service.dto.command.UpdateResidueCommand;
-import co.edu.udc.desechos_fabrica.residue.application.service.dto.mapper.ResidueApplicationMapper;
+import co.edu.udc.desechos_fabrica.residue.application.service.mapper.ResidueApplicationMapper;
 import co.edu.udc.desechos_fabrica.residue.domain.exception.ResidueNotFoundException;
 import co.edu.udc.desechos_fabrica.residue.domain.model.ResidueModel;
 import co.edu.udc.desechos_fabrica.residue.domain.valueobject.ResidueId;
