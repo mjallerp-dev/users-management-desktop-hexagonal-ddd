@@ -3,7 +3,10 @@ package co.edu.udc.desechos_fabrica.residue.application.service.dto.command;
 import jakarta.validation.constraints.*;
 import java.util.List;
 
-public record RegisterResidueCommand(
+public record UpdateResidueCommand(
+        @NotNull(message = "Residue ID must not be null")
+        Long id,
+
         @NotBlank(message = "Residue name must not be blank")
         @Size(min = 3, message = "Residue name must have at least 3 characters")
         String name,
