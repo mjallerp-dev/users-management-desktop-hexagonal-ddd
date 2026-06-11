@@ -1,4 +1,4 @@
-package co.edu.udc.desechos_fabrica.location.infrastructure.adapter.persistence.exception;
+package co.edu.udc.desechos_fabrica.generated_residue.infrastructure.adapter.persistence.exception;
 
 import co.edu.udc.desechos_fabrica.shared.domain.exception.DomainException;
 
