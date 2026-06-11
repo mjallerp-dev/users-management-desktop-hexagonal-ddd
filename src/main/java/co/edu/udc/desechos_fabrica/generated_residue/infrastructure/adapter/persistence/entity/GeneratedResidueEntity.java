@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 public record GeneratedResidueEntity(
         Long id,
         Long residueId,
+        Long enterpriseId,
         String code,
-        Double generatedQuantity,
-        LocalDateTime generationDate) {
+        Double generatedQuantity) {
 
 
 }

@@ -11,21 +11,20 @@ import lombok.experimental.UtilityClass;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @UtilityClass
 public class GeneratedResiduePersistenceMapper {
 
-    public static GeneratedResiduePersistenceDto fromModelToDto(final GeneratedResidueModel model, LocalDateTime generationDate) {
+    public static GeneratedResiduePersistenceDto fromModelToDto(final GeneratedResidueModel model) {
         return new GeneratedResiduePersistenceDto(
                 model.getId(),
                 model.getResidueId().value(),
                 model.getEnterpriseId().value(),
                 model.getCode().value(),
                 model.getQuantity().value(),
-                generationDate
+                model.getQuantity().unit().getSymbol()
         );
     }
 
