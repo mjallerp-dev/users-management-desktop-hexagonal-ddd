@@ -23,8 +23,7 @@ public class GeneratedResiduePersistenceMapper {
                 model.getResidueId().value(),
                 model.getEnterpriseId().value(),
                 model.getCode().value(),
-                model.getQuantity().value(),
-                model.getQuantity().unit().getSymbol()
+                model.getQuantity().value()
         );
     }
 
@@ -40,7 +39,7 @@ public class GeneratedResiduePersistenceMapper {
                 new GeneratedResidueCode(resultSet.getString("code")),
                 new ResidueId(resultSet.getLong("residue_id")),
                 enterpriseId,
-                new GeneratedQuantity(quantityValue, unit)
+                new GeneratedQuantity(quantityValue)
         );
     }
 

@@ -1,10 +1,14 @@
 package co.edu.udc.desechos_fabrica.config;
 
+import co.edu.udc.desechos_fabrica.generated_residue.application.port.in.RegisterGeneratedResidueUseCase;
+import co.edu.udc.desechos_fabrica.generated_residue.application.service.RegisterGeneratedResidueService;
+import co.edu.udc.desechos_fabrica.generated_residue.infrastructure.adapter.persistence.repository.GeneratedResidueRepositoryPostgresSQL;
 import co.edu.udc.desechos_fabrica.location.application.port.in.*;
-import co.edu.udc.desechos_fabrica.location.application.service.*; 
+import co.edu.udc.desechos_fabrica.location.application.service.*;
 import co.edu.udc.desechos_fabrica.location.infrastructure.adapter.persistence.repository.LocationRepositoryPostgresSQL;
 import co.edu.udc.desechos_fabrica.location.infrastructure.entrypoint.desktop.controller.LocationController;
 
+import co.edu.udc.desechos_fabrica.residue.infrastructure.adapter.persistence.repository.ResidueRepositoryPostgresSQL;
 import co.edu.udc.desechos_fabrica.user.application.port.in.*;
 import co.edu.udc.desechos_fabrica.user.application.service.*;
 import co.edu.udc.desechos_fabrica.user.domain.service.UserRoleManager;
@@ -88,6 +92,10 @@ public final class DependencyContainer {
                     deactivateLocationUseCase,
                     getLocationByIdUseCase,
                     getAllLocationsUseCase);
+
+    final GeneratedResidueRepositoryPostgresSQL generatedResidueRepository = new GeneratedResidueRepositoryPostgresSQL(connection);
+    final ResidueRepositoryPostgresSQL residueRepository = new ResidueRepositoryPostgresSQL(connection);
+    final RegisterGeneratedResidueUseCase registerGeneratedResidueUseCase = new RegisterGeneratedResidueService(generatedResidueRepository, generatedResidueRepository, residueRepository, validator);
   }
   
   public UserController userController() {

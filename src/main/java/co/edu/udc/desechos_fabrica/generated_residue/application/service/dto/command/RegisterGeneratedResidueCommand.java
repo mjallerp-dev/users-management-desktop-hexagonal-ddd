@@ -3,7 +3,6 @@ package co.edu.udc.desechos_fabrica.generated_residue.application.service.dto.co
 public record RegisterGeneratedResidueCommand(
         Long residueId,
         String code,
-        Double residueQuantity,
-        String measurementUnit,
-        Long enterpriseId
+        Long enterpriseId,
+        Double residueQuantity
 ) {}

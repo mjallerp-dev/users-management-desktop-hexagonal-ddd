@@ -5,7 +5,6 @@ public record GeneratedResiduePersistenceDto(
         Long residueId,
         Long enterpriseId,
         String code,
-        Double generatedQuantity,
-        String quantityUnit
+        Double generatedQuantity
 ) {
 }

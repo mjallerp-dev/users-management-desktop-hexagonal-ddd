@@ -54,6 +54,21 @@ public final class ConsoleIO {
     }
   }
 
+  public Double readDouble(final String prompt) {
+    while (true) {
+      out.print(prompt);
+      final String raw = scanner.nextLine().trim();
+      if (raw.isBlank()){
+        return null;
+      }
+      try {
+        return Double.parseDouble(raw);
+      } catch (final NumberFormatException ignored) {
+        out.println("  Invalid input. Please enter a decimal number (e.g., 12.5).");
+      }
+    }
+  }
+
   public void println(final String message) {
     out.println(message);
   }
